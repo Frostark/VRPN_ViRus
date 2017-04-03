@@ -23,20 +23,37 @@ http://www.ogre3d.org/wiki/
 //---------------------------------------------------------------------------
 
 #include "vrpn_Tracker.h"
+#include "vrpn_Button.h"
+
+#include "Physics.hpp"
+
+#include "OgreBulletDynamicsRigidBody.h" // for OgreBullet
+#include "Shapes/OgreBulletCollisionsStaticPlaneShape.h" // for static planes
+#include "Shapes/OgreBulletCollisionsBoxShape.h" // for boxes
 
 class TutorialApplication : public BaseApplication
 {
 public:
 	TutorialApplication(void);
 	virtual ~TutorialApplication(void);
+
+	bool shotRight = false, shotLeft = false;
+
 protected:
 	virtual void createScene(void);
+	virtual void destroyScene(void);
 	// Ogre::FrameListener
 	virtual bool frameRenderingQueued(const Ogre::FrameEvent& evt);
 
 private:
+
+	//Shoot a bullet from a sceneNode
+	void shootBullet(Ogre::SceneNode *scene);
+
 	//Update nodes' positions based on trackers
 	bool processUnbufferedInput(const Ogre::FrameEvent& evt);
+	static void VRPN_CALLBACK handleButton1(void * userData, const vrpn_BUTTONCB b);
+	static void VRPN_CALLBACK handleButton2(void * userData, const vrpn_BUTTONCB b);
 	//Handlers for tracker events
 	static void VRPN_CALLBACK handleHMDTracker(void* userData, const vrpn_TRACKERCB t);
 
@@ -46,8 +63,17 @@ private:
 	//Tracker for left and right hands, and HMD
 	vrpn_Tracker_Remote *tracker;
 
+	vrpn_Button_Remote *vrpnButton1, *vrpnButton2;
+
 	//Nodes for each tracker
 	Ogre::SceneNode* rightHandNode, *leftHandNode, *HMDNode;
+
+	// Bullet Physics engine
+	OgreBulletDynamics::DynamicsWorld *mWorld; // OgreBullet World
+	OgreBulletCollisions::DebugDrawer *debugDrawer;
+	int mNumEntitiesInstanced;
+
+	ViRus::HitMap hitmap;
 
 };
 #endif // #ifndef __TutorialApplication_h_

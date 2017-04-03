@@ -29,6 +29,15 @@ TutorialApplication::~TutorialApplication(void)
 //---------------------------------------------------------------------------
 void TutorialApplication::createScene(void)
 {
+	//Set up the scene manager on the map
+	ViRus::Hittable::ptr_scn_mgr = mSceneMgr;
+
+	mNumEntitiesInstanced = 0; // how many shapes are created
+
+	mWorld = new OgreBulletDynamics::DynamicsWorld(mSceneMgr,
+		Ogre::AxisAlignedBox(Ogre::Vector3(-10000, -10000, -10000), Ogre::Vector3(10000, 10000, 10000)), //aligned box for Bullet
+		Ogre::Vector3(0, -9.81, 0)); // gravity vector for Bullet
+
 	//Create the camera that will be controlled by the HMD
 	Ogre::Camera* newCamera = mSceneMgr->createCamera("NewCam");
 	mWindow->getViewport(0)->setCamera(newCamera);
@@ -38,6 +47,11 @@ void TutorialApplication::createScene(void)
 
 	tracker = new vrpn_Tracker_Remote("iotracker@161.67.196.59:3883");
 	tracker->register_change_handler(this, handleHMDTracker);
+
+	vrpnButton1 = new vrpn_Button_Remote("joyWin32_1@localhost");
+	vrpnButton2 = new vrpn_Button_Remote("joyWin32_2@localhost");
+	vrpnButton1->register_change_handler(this, handleButton1);
+	vrpnButton2->register_change_handler(this, handleButton2);
 
 	//Init tracking data
 	vrpn_TRACKERCB blank = { 0, 0, 0, 0, 0, 0, 0, 0, 0, 1 };
@@ -82,6 +96,47 @@ void TutorialApplication::createScene(void)
 	// Create a Light and set its position
 	Ogre::Light* light = mSceneMgr->createLight("MainLight");
 	light->setPosition(20.0f, 80.0f, 50.0f);
+
+
+	//Floor
+	// Define a floor plane mesh
+	Ogre::Plane floorPlane;
+	floorPlane.normal = Ogre::Vector3::UNIT_Y;
+	floorPlane.d = 0.0;
+	Ogre::MeshManager::getSingleton().createPlane("FloorPlane",
+		Ogre::ResourceGroupManager::DEFAULT_RESOURCE_GROUP_NAME,
+		floorPlane, 1000, 1000, 20, 20, true, 1, 50, 50, Ogre::Vector3::UNIT_Z);
+
+	// Create the entity (the floor)
+	Ogre::Entity* floor = mSceneMgr->createEntity("Floor", "FloorPlane");
+	floor->setMaterialName("Examples/BumpyMetal");
+	floor->setCastShadows(false);
+	Ogre::SceneNode * floorNode = mSceneMgr->getRootSceneNode()->createChildSceneNode();
+	floorNode->attachObject(floor);
+
+	// Add collision detection to it
+	OgreBulletCollisions::CollisionShape *floorShape;
+	floorShape = new OgreBulletCollisions::StaticPlaneCollisionShape(Ogre::Vector3::UNIT_Y, 0); // (normal vector, distance)
+
+																								// A rigid body is needed for the shape
+	OgreBulletDynamics::RigidBody *floorBody = new OgreBulletDynamics::RigidBody("FloorBody", mWorld);
+	floorBody->setStaticShape(floorShape, 0.1, 0.8); // (shape, restitution, friction)
+
+													 // Push the created objects to the deques
+
+	ViRus::Hittable *floorHittable = new ViRus::HitObstacle(floorBody, floorShape, floorNode);
+	hitmap.add_hittable(*floorBody->getBulletObject(), *floorHittable);
+}
+
+void TutorialApplication::destroyScene(void)
+{
+	BaseApplication::destroyScene();
+
+	hitmap.clear_all();
+
+	delete mWorld->getDebugDrawer();
+	mWorld->setDebugDrawer(nullptr);
+	delete mWorld;
 }
 
 //-------------------------------------------------------------------------------------
@@ -98,6 +153,61 @@ bool TutorialApplication::frameRenderingQueued(const Ogre::FrameEvent& evt)
 	return ret;
 }
 
+void TutorialApplication::shootBullet(Ogre::SceneNode * scene)
+{
+	Ogre::SceneNode *pNode = scene;
+	Ogre::Vector3 from = pNode->getPosition();
+	Ogre::Vector3 dir = pNode->getOrientation() * Ogre::Vector3(0, 0, -1);
+
+	// Create and throw a barrel if 'B' is pressed
+	// Starting position of the barrel
+	Ogre::Vector3 position = (from + dir.normalisedCopy() * 10.0f);
+
+	// Create an ordinary, Ogre mesh with texture
+	Ogre::Entity *barrel = mSceneMgr->createEntity(
+		"Barrel" + Ogre::StringConverter::toString(mNumEntitiesInstanced), "Barrel.mesh");
+	barrel->setCastShadows(true);
+	Ogre::SceneNode *barrelNode = mSceneMgr->getRootSceneNode()->createChildSceneNode();
+	barrelNode->attachObject(barrel);
+
+	// We need the bounding box of the entity to be able to set the size of the Bullet shape
+	Ogre::AxisAlignedBox barrelBoundingBox = barrel->getBoundingBox();
+
+	// Size of the Bullet shape, a box
+	Ogre::Vector3 barrelShapeSize = Ogre::Vector3::ZERO;
+	barrelShapeSize = barrelBoundingBox.getSize();
+	barrelShapeSize /= 2.0f; // Only the half needed
+	barrelShapeSize *= 0.25f; // Bullet margin is a bit bigger so we need a smaller size
+
+	barrelNode->scale(Ogre::Vector3(0.25f, 0.25f, 0.25f));
+
+	// After that create the Bullet shape with the calculated size
+	OgreBulletCollisions::BoxCollisionShape *barrelShape;
+	barrelShape = new OgreBulletCollisions::BoxCollisionShape(barrelShapeSize);
+
+	// and the Bullet rigid body
+	OgreBulletDynamics::RigidBody *barrelBody = new OgreBulletDynamics::RigidBody(
+		"defaultBoxRigid" + Ogre::StringConverter::toString(mNumEntitiesInstanced), mWorld);
+	barrelBody->setShape(barrelNode, barrelShape,
+		0.6f, // dynamic body restitution
+		0.6f, // dynamic body friction
+		100.0f, // dynamic bodymass
+		position, // starting position of the shape
+		Ogre::Quaternion(0, 0, 0, 1)); // orientation of the shape
+	barrelBody->setLinearVelocity(dir.normalisedCopy() * 100.0f); // shooting speed
+
+
+	barrelBody->getBulletRigidBody()->setAngularFactor(btVector3(0, 0, 0));
+
+	mNumEntitiesInstanced++;
+
+	// Push the created objects to the deques
+
+	ViRus::Hittable *barrelHittable = new ViRus::HitProjectile(barrelBody, barrelShape, barrelNode, ViRus::TeamType::HERO, 10);
+
+	hitmap.add_hittable(*barrelBody->getBulletObject(), *barrelHittable);
+}
+
 //Update nodes' positions based on trackers
 bool TutorialApplication::processUnbufferedInput(const Ogre::FrameEvent& evt)
 {
@@ -110,9 +220,47 @@ bool TutorialApplication::processUnbufferedInput(const Ogre::FrameEvent& evt)
 	leftHandNode->setPosition(Ogre::Vector3(leftHandData.pos[0], leftHandData.pos[1], leftHandData.pos[2]));
 	leftHandNode->setOrientation(leftHandData.quat[3], leftHandData.quat[0], leftHandData.quat[1], leftHandData.quat[2]);
 
+
+	// Update Bullet Physics animation
+	mWorld->stepSimulation(evt.timeSinceLastFrame);
+
+	btDynamicsWorld * mBulletWorld = mWorld->getBulletDynamicsWorld();
+	int numManifolds = mBulletWorld->getDispatcher()->getNumManifolds();
+	for (int i = 0;i<numManifolds;i++)
+	{
+		btPersistentManifold* contactManifold = mBulletWorld->getDispatcher()->getManifoldByIndexInternal(i);
+		btCollisionObject* obA = const_cast<btCollisionObject*>(contactManifold->getBody0());
+		btCollisionObject* obB = const_cast<btCollisionObject*>(contactManifold->getBody1());
+
+		hitmap.handle_collision(obA, obB);
+	}
+
+	hitmap.clean_queued();
+
+	if (shotLeft)
+	{
+		shootBullet(leftHandNode);
+		shotLeft = false;
+	}
+
+	if (shotRight)
+	{
+		shootBullet(rightHandNode);
+		shotRight= false;
+	}
+
 	return true;
 }
 
+void VRPN_CALLBACK TutorialApplication::handleButton1(void* userData, const vrpn_BUTTONCB b)
+{
+	static_cast<TutorialApplication *>(userData)->shotLeft = true;
+}
+
+void VRPN_CALLBACK TutorialApplication::handleButton2(void* userData, const vrpn_BUTTONCB b)
+{
+	static_cast<TutorialApplication *>(userData)->shotRight = true;
+}
 
 void VRPN_CALLBACK TutorialApplication::handleHMDTracker(void* userData, const vrpn_TRACKERCB t)
 {

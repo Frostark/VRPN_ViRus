@@ -162,6 +162,8 @@ bool TutorialApplication::frameRenderingQueued(const Ogre::FrameEvent& evt)
 
 	//Tracker loops
 	tracker->mainloop();
+	vrpnButton1->mainloop();
+	vrpnButton2->mainloop();
 
 	if (!processUnbufferedInput(evt)) return false;
 

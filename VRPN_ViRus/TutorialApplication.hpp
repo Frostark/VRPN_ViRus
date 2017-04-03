@@ -32,6 +32,8 @@ http://www.ogre3d.org/wiki/
 #include "Shapes/OgreBulletCollisionsStaticPlaneShape.h" // for static planes
 #include "Shapes/OgreBulletCollisionsBoxShape.h" // for boxes
 
+ViRus::HitCharacter *ptr_target;
+
 class TutorialApplication : public BaseApplication
 {
 public:
@@ -47,9 +49,6 @@ protected:
 	virtual bool frameRenderingQueued(const Ogre::FrameEvent& evt);
 
 private:
-
-	//Shoot a bullet from a sceneNode
-	void shootBullet(Ogre::SceneNode *scene);
 
 	//Update nodes' positions based on trackers
 	bool processUnbufferedInput(const Ogre::FrameEvent& evt);
@@ -77,6 +76,8 @@ private:
 	ViRus::HitMap hitmap;
 	ViRus::Gun *left_gun;
 	ViRus::Gun *right_gun;
+
+	static void target_callback(ViRus::Hittable *);
 
 };
 #endif // #ifndef __TutorialApplication_h_

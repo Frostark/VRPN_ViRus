@@ -156,11 +156,13 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="BaseApplication.cpp" />
+    <ClCompile Include="Gameplay.cpp" />
     <ClCompile Include="Physics.cpp" />
     <ClCompile Include="TutorialApplication.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="BaseApplication.hpp" />
+    <ClInclude Include="Gameplay.hpp" />
     <ClInclude Include="Physics.hpp" />
     <ClInclude Include="TutorialApplication.hpp" />
   </ItemGroup>

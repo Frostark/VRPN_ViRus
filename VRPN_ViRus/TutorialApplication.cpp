@@ -140,7 +140,7 @@ void TutorialApplication::createScene(void)
 	right_gun = new ViRus::Gun(rightHandNode, "Barrel.mesh");
 
 
-	static constexpr double PENGUIN_SCALING = 0.1;
+	static constexpr double PENGUIN_SCALING = 0.04;
 
 	// Define the penguin mesh
 	Ogre::Entity* penguin = mSceneMgr->createEntity("Penguin", "penguin.mesh");
@@ -179,6 +179,8 @@ void TutorialApplication::createScene(void)
 		penguinPosition, penguinOrientation); // starting position, orientation)
 	penguinBody->setKinematicObject(true);
 	penguinBody->disableDeactivation();
+
+	penguinNode->translate(Ogre::Vector3(0, 0, -5));
 
 	// Push the created objects to the deques
 

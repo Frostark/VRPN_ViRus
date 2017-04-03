@@ -26,6 +26,7 @@ http://www.ogre3d.org/wiki/
 #include "vrpn_Button.h"
 
 #include "Physics.hpp"
+#include "Gameplay.hpp"
 
 #include "OgreBulletDynamicsRigidBody.h" // for OgreBullet
 #include "Shapes/OgreBulletCollisionsStaticPlaneShape.h" // for static planes
@@ -74,6 +75,8 @@ private:
 	int mNumEntitiesInstanced;
 
 	ViRus::HitMap hitmap;
+	ViRus::Gun *left_gun;
+	ViRus::Gun *right_gun;
 
 };
 #endif // #ifndef __TutorialApplication_h_

@@ -135,6 +135,14 @@ void TutorialApplication::createScene(void)
 
 	ViRus::Hittable *floorHittable = new ViRus::HitObstacle(floorBody, floorShape, floorNode);
 	hitmap.add_hittable(*floorBody->getBulletObject(), *floorHittable);
+
+	//Guns
+
+	//Left gun
+	left_gun = new ViRus::Gun(leftHandNode, "Barrel.mesh");
+
+	//Right gun
+	right_gun = new ViRus::Gun(rightHandNode, "Barrel.mesh");
 }
 
 void TutorialApplication::destroyScene(void)
@@ -146,6 +154,9 @@ void TutorialApplication::destroyScene(void)
 	delete mWorld->getDebugDrawer();
 	mWorld->setDebugDrawer(nullptr);
 	delete mWorld;
+
+	delete left_gun;
+	delete right_gun;
 }
 
 //-------------------------------------------------------------------------------------
@@ -161,61 +172,6 @@ bool TutorialApplication::frameRenderingQueued(const Ogre::FrameEvent& evt)
 	if (!processUnbufferedInput(evt)) return false;
 
 	return ret;
-}
-
-void TutorialApplication::shootBullet(Ogre::SceneNode * scene)
-{
-	Ogre::SceneNode *pNode = scene;
-	Ogre::Vector3 from = pNode->getPosition();
-	Ogre::Vector3 dir = pNode->getOrientation() * Ogre::Vector3(0, 0, -1);
-
-	// Create and throw a barrel if 'B' is pressed
-	// Starting position of the barrel
-	Ogre::Vector3 position = (from + dir.normalisedCopy() * 10.0f);
-
-	// Create an ordinary, Ogre mesh with texture
-	Ogre::Entity *barrel = mSceneMgr->createEntity(
-		"Barrel" + Ogre::StringConverter::toString(mNumEntitiesInstanced), "Barrel.mesh");
-	barrel->setCastShadows(true);
-	Ogre::SceneNode *barrelNode = mSceneMgr->getRootSceneNode()->createChildSceneNode();
-	barrelNode->attachObject(barrel);
-
-	// We need the bounding box of the entity to be able to set the size of the Bullet shape
-	Ogre::AxisAlignedBox barrelBoundingBox = barrel->getBoundingBox();
-
-	// Size of the Bullet shape, a box
-	Ogre::Vector3 barrelShapeSize = Ogre::Vector3::ZERO;
-	barrelShapeSize = barrelBoundingBox.getSize();
-	barrelShapeSize /= 2.0f; // Only the half needed
-	barrelShapeSize *= 0.25f; // Bullet margin is a bit bigger so we need a smaller size
-
-	barrelNode->scale(Ogre::Vector3(0.25f, 0.25f, 0.25f));
-
-	// After that create the Bullet shape with the calculated size
-	OgreBulletCollisions::BoxCollisionShape *barrelShape;
-	barrelShape = new OgreBulletCollisions::BoxCollisionShape(barrelShapeSize);
-
-	// and the Bullet rigid body
-	OgreBulletDynamics::RigidBody *barrelBody = new OgreBulletDynamics::RigidBody(
-		"defaultBoxRigid" + Ogre::StringConverter::toString(mNumEntitiesInstanced), mWorld);
-	barrelBody->setShape(barrelNode, barrelShape,
-		0.6f, // dynamic body restitution
-		0.6f, // dynamic body friction
-		100.0f, // dynamic bodymass
-		position, // starting position of the shape
-		Ogre::Quaternion(0, 0, 0, 1)); // orientation of the shape
-	barrelBody->setLinearVelocity(dir.normalisedCopy() * 100.0f); // shooting speed
-
-
-	barrelBody->getBulletRigidBody()->setAngularFactor(btVector3(0, 0, 0));
-
-	mNumEntitiesInstanced++;
-
-	// Push the created objects to the deques
-
-	ViRus::Hittable *barrelHittable = new ViRus::HitProjectile(barrelBody, barrelShape, barrelNode, ViRus::TeamType::HERO, 10);
-
-	hitmap.add_hittable(*barrelBody->getBulletObject(), *barrelHittable);
 }
 
 //Update nodes' positions based on trackers
@@ -249,27 +205,31 @@ bool TutorialApplication::processUnbufferedInput(const Ogre::FrameEvent& evt)
 
 	if (shotLeft)
 	{
-		shootBullet(leftHandNode);
+		left_gun->fire();
 		shotLeft = false;
 	}
 
 	if (shotRight)
 	{
-		shootBullet(rightHandNode);
+		right_gun->fire();
 		shotRight= false;
 	}
+
+	left_gun->refresh(evt.timeSinceLastFrame);
 
 	return true;
 }
 
 void VRPN_CALLBACK TutorialApplication::handleButton1(void* userData, const vrpn_BUTTONCB b)
 {
-	static_cast<TutorialApplication *>(userData)->shotLeft = true;
+	if (b.button == 0 && b.state)
+		static_cast<TutorialApplication *>(userData)->shotLeft = true;
 }
 
 void VRPN_CALLBACK TutorialApplication::handleButton2(void* userData, const vrpn_BUTTONCB b)
 {
-	static_cast<TutorialApplication *>(userData)->shotRight = true;
+	if (b.button == 0 & b.state)
+		static_cast<TutorialApplication *>(userData)->shotRight = true;
 }
 
 void VRPN_CALLBACK TutorialApplication::handleHMDTracker(void* userData, const vrpn_TRACKERCB t)

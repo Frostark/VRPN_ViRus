@@ -129,6 +129,10 @@ void TutorialApplication::createScene(void)
 
 	//Guns
 
+	ViRus::Gun::hitmap = &hitmap;
+	ViRus::Gun::mWorld = mWorld;
+	ViRus::Gun::ptr_scn_mgr = mSceneMgr;
+
 	//Left gun
 	left_gun = new ViRus::Gun(leftHandNode, "Barrel.mesh");
 
@@ -206,6 +210,7 @@ bool TutorialApplication::processUnbufferedInput(const Ogre::FrameEvent& evt)
 	}
 
 	left_gun->refresh(evt.timeSinceLastFrame);
+	right_gun->refresh(evt.timeSinceLastFrame);
 
 	return true;
 }

@@ -152,7 +152,7 @@ void TutorialApplication::createScene(void)
 	right_gun = new ViRus::Gun(rightHandNode, "Barrel.mesh");
 
 
-	static constexpr double PENGUIN_SCALING = 0.05;
+	static constexpr double PENGUIN_SCALING = 0.04;
 
 	// Define the penguin mesh
 	Ogre::Entity* penguin = mSceneMgr->createEntity("Penguin", "penguin.mesh");

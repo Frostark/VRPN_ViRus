@@ -42,11 +42,14 @@ void TutorialApplication::createScene(void)
 		Ogre::Vector3(0, -9.81, 0)); // gravity vector for Bullet
 
 	//Create the camera that will be controlled by the HMD
-	Ogre::Camera* newCamera = mSceneMgr->createCamera("NewCam");
+	/*Ogre::Camera* newCamera = mSceneMgr->createCamera("NewCam");
 	mWindow->getViewport(0)->setCamera(newCamera);
 	newCamera->setPosition(Ogre::Vector3(0, 0, 0));
 	newCamera->lookAt(Ogre::Vector3(Ogre::Vector3::NEGATIVE_UNIT_Z));
-	newCamera->setNearClipDistance(0.1);
+	newCamera->setNearClipDistance(0.1);*/
+
+	mCamera->setPosition(Ogre::Vector3::ZERO + player_pos);
+	mCameraMan->setTopSpeed(3);
 
 	//tracker = new vrpn_Tracker_Remote("iotracker@161.67.196.59:3883");
 	//tracker->register_change_handler(this, handleHMDTracker);
@@ -81,7 +84,7 @@ void TutorialApplication::createScene(void)
 	//Attach an eye node to the HMD node, and translate the offset from the tracer's position to the eye position
 	Ogre::SceneNode *eyeNode = HMDNode->createChildSceneNode();
 	eyeNode->translate(0.0, -0.1, 0.05);
-	eyeNode->attachObject(newCamera);//Attach the camera to the eyeNode
+	//eyeNode->attachObject(newCamera);//Attach the camera to the eyeNode
 
 	//Create the left hand node, and attach the entity to it
 	leftHandNode = mSceneMgr->getRootSceneNode()->createChildSceneNode("leftHandNode");
@@ -149,7 +152,7 @@ void TutorialApplication::createScene(void)
 	right_gun = new ViRus::Gun(rightHandNode, "Barrel.mesh");
 
 
-	static constexpr double PENGUIN_SCALING = 0.1;
+	static constexpr double PENGUIN_SCALING = 0.05;
 
 	// Define the penguin mesh
 	Ogre::Entity* penguin = mSceneMgr->createEntity("Penguin", "penguin.mesh");
@@ -189,6 +192,9 @@ void TutorialApplication::createScene(void)
 	penguinBody->setKinematicObject(true);
 	penguinBody->disableDeactivation();
 
+
+	penguinNode->translate(Ogre::Vector3(0, 0, -5));
+
 	// Push the created objects to the deques
 
 	ptr_target = new ViRus::HitCharacter(penguinBody, penguinShape, penguinNode, ViRus::TeamType::ENEMY, 40);
@@ -220,7 +226,7 @@ bool TutorialApplication::frameRenderingQueued(const Ogre::FrameEvent& evt)
 	//Tracker loops
 	//tracker->mainloop();
 	vrpnButton1->mainloop();
-	vrpnButton2->mainloop();
+	//vrpnButton2->mainloop();
 
 	if (!processUnbufferedInput(evt)) return false;
 

@@ -41,6 +41,14 @@ void TutorialApplication::createScene(void)
 		Ogre::AxisAlignedBox(Ogre::Vector3(-10000, -10000, -10000), Ogre::Vector3(10000, 10000, 10000)), //aligned box for Bullet
 		Ogre::Vector3(0, -9.81, 0)); // gravity vector for Bullet
 
+	debugDrawer = new OgreBulletCollisions::DebugDrawer();
+	debugDrawer->setDrawWireframe(true); // we want to see the Bullet shapes
+
+	mWorld->setDebugDrawer(debugDrawer);
+	mWorld->setShowDebugShapes(true); // enable it if you want to see the Bullet shapes
+	Ogre::SceneNode *node = mSceneMgr->getRootSceneNode()->createChildSceneNode("debugDrawer", Ogre::Vector3::ZERO);
+	node->attachObject(static_cast <Ogre::SimpleRenderable *> (debugDrawer));
+
 	//Create the camera that will be controlled by the HMD
 	/*Ogre::Camera* newCamera = mSceneMgr->createCamera("NewCam");
 	mWindow->getViewport(0)->setCamera(newCamera);

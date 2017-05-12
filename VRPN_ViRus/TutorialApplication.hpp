@@ -31,8 +31,10 @@ http://www.ogre3d.org/wiki/
 #include "OgreBulletDynamicsRigidBody.h" // for OgreBullet
 #include "Shapes/OgreBulletCollisionsStaticPlaneShape.h" // for static planes
 #include "Shapes/OgreBulletCollisionsBoxShape.h" // for boxes
+#include "Shapes/OgreBulletCollisionsCylinderShape.h" // for cylinders
 
 ViRus::HitCharacter *ptr_target;
+ViRus::HitCharacter *ptr_hero;
 
 class TutorialApplication : public BaseApplication
 {

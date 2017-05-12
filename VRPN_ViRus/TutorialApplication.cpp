@@ -201,6 +201,23 @@ void TutorialApplication::createScene(void)
 	ptr_target->set_callback(target_callback);
 
 	hitmap.add_hittable(*penguinBody->getBulletObject(), *ptr_target);
+
+	//Character physics
+
+	//Add the collider to the head
+	Ogre::Vector3 HMD_cylinder_size(0.25, 2, 0.25);
+	OgreBulletCollisions::CylinderCollisionShape *HMDCylinder = new OgreBulletCollisions::CylinderCollisionShape(HMD_cylinder_size, Ogre::Vector3::UNIT_Y);
+
+	OgreBulletDynamics::RigidBody *HMDbody = new OgreBulletDynamics::RigidBody("HMDbody", mWorld);
+	HMDbody->setStaticShape(HMDNode, HMDCylinder, 0.6, 0.6);
+	HMDbody->setKinematicObject(true);
+	HMDbody->disableDeactivation();
+
+	ptr_hero = new ViRus::HitCharacter(HMDbody, HMDCylinder, HMDNode, ViRus::TeamType::HERO, 100);
+	ptr_hero->set_callback(target_callback);
+
+	hitmap.add_hittable(*HMDbody->getBulletObject(), *ptr_hero);
+
 }
 
 void TutorialApplication::destroyScene(void)
@@ -321,9 +338,12 @@ void VRPN_CALLBACK TutorialApplication::handleHMDTracker(void* userData, const v
 		pData->pos[2] /= 1000;
 	}
 }
-void TutorialApplication::target_callback(ViRus::Hittable *)
+void TutorialApplication::target_callback(ViRus::Hittable *h)
 {
-	ptr_target = nullptr;
+	if (h == ptr_target)
+		ptr_target = nullptr;
+	else if (h == ptr_hero)
+		ptr_hero = nullptr;
 }
 //-------------------------------------------------------------------------------------
 

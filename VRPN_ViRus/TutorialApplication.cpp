@@ -87,7 +87,7 @@ void TutorialApplication::createScene(void)
 	//Create the HMD node
 	HMDNode = mSceneMgr->getRootSceneNode()->createChildSceneNode("HMDNode");
 
-	HMDNode->setPosition(Ogre::Vector3::ZERO + player_pos);
+	HMDNode->setPosition(player_pos);
 
 	//Attach an eye node to the HMD node, and translate the offset from the tracer's position to the eye position
 	Ogre::SceneNode *eyeNode = HMDNode->createChildSceneNode();
@@ -214,11 +214,13 @@ void TutorialApplication::createScene(void)
 
 	//Add the collider to the head
 	Ogre::Vector3 HMD_cylinder_size(0.25, 2, 0.25);
-	HMD_cylinder_size /= 2.0;
+	HMD_cylinder_size *= 0.5;
+	
 	OgreBulletCollisions::CylinderCollisionShape *HMDCylinder = new OgreBulletCollisions::CylinderCollisionShape(HMD_cylinder_size, Ogre::Vector3::UNIT_Y);
 
 	OgreBulletDynamics::RigidBody *HMDbody = new OgreBulletDynamics::RigidBody("HMDbody", mWorld);
-	HMDbody->setStaticShape(HMDNode, HMDCylinder, 0.6, 0.6);
+	std::ofstream("output.txt") << "(" << HMDNode->getPosition().x << "," << HMDNode->getPosition().y << "," << HMDNode->getPosition().z << ")";
+	HMDbody->setStaticShape(HMDNode, HMDCylinder, 0.6, 0.6,HMDNode->getPosition(),HMDNode->getOrientation());
 	HMDbody->setKinematicObject(true);
 	HMDbody->disableDeactivation();
 

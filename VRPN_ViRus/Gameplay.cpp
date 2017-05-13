@@ -84,13 +84,17 @@ namespace ViRus
 		Ogre::Entity *enemy = ptr_scn_mgr->createEntity("Enemy" + Ogre::StringConverter::toString(total_spawned), mesh_name);
 		enemy->setCastShadows(true);
 		Ogre::SceneNode *enemyNode = ptr_scn_mgr->getRootSceneNode()->createChildSceneNode();
-		enemyNode->attachObject(enemy);
+		Ogre::SceneNode *enemyMeshNode = enemyNode->createChildSceneNode();
+		enemyMeshNode->attachObject(enemy);
 
 		enemyNode->scale(scale, scale, scale);
 		Ogre::Vector3 enemySize = enemy->getBoundingBox().getSize();
 		enemySize *= 0.5*scale;
 
+		enemyMeshNode->translate(Ogre::Vector3(0, -enemySize.y, 0), Ogre::Node::TS_WORLD);
+
 		Ogre::Vector3 position(vector.x, enemySize.y, vector.y);
+		enemyNode->translate(position);
 
 
 		OgreBulletCollisions::CylinderCollisionShape *cylinder = new OgreBulletCollisions::CylinderCollisionShape(enemySize, Ogre::Vector3::UNIT_Y);
@@ -116,5 +120,12 @@ namespace ViRus
 		}
 		n_enemies = 0;
 		enemies.clear();
+	}
+	void Spawner::chase(HitCharacter &h)
+	{
+		for (HitCharAttack *ptr : enemies)
+		{
+			ptr->chase(h);
+		}
 	}
 }

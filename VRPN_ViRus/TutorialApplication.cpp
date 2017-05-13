@@ -175,10 +175,8 @@ void TutorialApplication::createScene(void)
 	OgreBulletDynamics::RigidBody *penguinBody = new OgreBulletDynamics::RigidBody("penguinBody", mWorld);
 	Ogre::Vector3 penguinPosition = penguinNode->getPosition();
 	Ogre::Quaternion penguinOrientation = penguinNode->getOrientation();
-	penguinBody->setStaticShape(penguinNode, penguinShape, 0.6, 0.6, // (node, shape, restitution, friction,
+	penguinBody->setShape(penguinNode, penguinShape, 0.1f, 5.0f, 10.0f, // (node, shape, restitution, friction, mass
 		penguinPosition, penguinOrientation); // starting position, orientation)
-	penguinBody->setKinematicObject(true);
-	penguinBody->disableDeactivation();
 
 	penguinNode->translate(Ogre::Vector3(0, 0, -5));
 

@@ -51,6 +51,17 @@ void TutorialApplication::createScene(void)
 	mapNode->setPosition(Ogre::Vector3(-17, 0.0, 16));
 	mapNode->attachObject(ogreMap);
 
+	// Add collision detection to it
+	OgreBulletCollisions::CollisionShape *floorShape;
+	floorShape = new OgreBulletCollisions::StaticPlaneCollisionShape(Ogre::Vector3::UNIT_Y, 0); // (normal vector, distance)
+
+	// A rigid body is needed for the shape
+	OgreBulletDynamics::RigidBody *floorBody = new OgreBulletDynamics::RigidBody("FloorBody", mWorld);
+	floorBody->setStaticShape(floorShape, 0.1, 0.8); // (shape, restitution, friction)
+
+	// Push the created objects to the deques
+	ViRus::Hittable *floorHittable = new ViRus::HitObstacle(floorBody, floorShape, mapNode);
+	hitmap.add_hittable(*floorBody->getBulletObject(), *floorHittable);
 
 	debugDrawer = new OgreBulletCollisions::DebugDrawer();
 	debugDrawer->setDrawWireframe(true); // we want to see the Bullet shapes
@@ -127,36 +138,6 @@ void TutorialApplication::createScene(void)
 	// Create a Light and set its position
 	Ogre::Light* light = mSceneMgr->createLight("MainLight");
 	light->setPosition(20.0f, 80.0f, 50.0f);
-
-
-	//Floor
-	// Define a floor plane mesh
-	Ogre::Plane floorPlane;
-	floorPlane.normal = Ogre::Vector3::UNIT_Y;
-	floorPlane.d = 0.0;
-	Ogre::MeshManager::getSingleton().createPlane("FloorPlane",
-		Ogre::ResourceGroupManager::DEFAULT_RESOURCE_GROUP_NAME,
-		floorPlane, 1000, 1000, 20, 20, true, 1, 50, 50, Ogre::Vector3::UNIT_Z);
-
-	// Create the entity (the floor)
-	Ogre::Entity* floor = mSceneMgr->createEntity("Floor", "FloorPlane");
-	floor->setMaterialName("Examples/BumpyMetal");
-	floor->setCastShadows(false);
-	Ogre::SceneNode * floorNode = mSceneMgr->getRootSceneNode()->createChildSceneNode();
-	floorNode->attachObject(floor);
-
-	// Add collision detection to it
-	OgreBulletCollisions::CollisionShape *floorShape;
-	floorShape = new OgreBulletCollisions::StaticPlaneCollisionShape(Ogre::Vector3::UNIT_Y, 0); // (normal vector, distance)
-
-																								// A rigid body is needed for the shape
-	OgreBulletDynamics::RigidBody *floorBody = new OgreBulletDynamics::RigidBody("FloorBody", mWorld);
-	floorBody->setStaticShape(floorShape, 0.1, 0.8); // (shape, restitution, friction)
-
-													 // Push the created objects to the deques
-
-	ViRus::Hittable *floorHittable = new ViRus::HitObstacle(floorBody, floorShape, floorNode);
-	hitmap.add_hittable(*floorBody->getBulletObject(), *floorHittable);
 
 	//Guns
 

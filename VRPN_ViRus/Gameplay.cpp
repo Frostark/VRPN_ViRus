@@ -104,4 +104,13 @@ namespace ViRus
 
 		hitmap->add_hittable(*body->getBulletObject(), ref_hit);
 	}
+	void Spawner::kill_all()
+	{
+		for (HitCharAttack &ref : enemies)
+		{
+			hitmap->delete_hittable(ref);
+		}
+
+		enemies.clear();
+	}
 }

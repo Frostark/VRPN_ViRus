@@ -177,7 +177,7 @@ void TutorialApplication::createScene(void)
 	Ogre::Quaternion penguinOrientation = penguinNode->getOrientation();
 	penguinBody->setShape(penguinNode, penguinShape, 0.1f, 5.0f, 10.0f, // (node, shape, restitution, friction, mass
 		penguinPosition, penguinOrientation); // starting position, orientation)
-
+	penguinBody->getBulletRigidBody()->setAngularFactor(btVector3(0, 0, 0));
 	penguinNode->translate(Ogre::Vector3(0, 0, -5));
 
 	// Push the created objects to the deques

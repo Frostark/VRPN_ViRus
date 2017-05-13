@@ -41,11 +41,11 @@ void TutorialApplication::createScene(void)
 	//Load the map
 
 	// Create an Entity
-	Ogre::Entity* ogreMap = mSceneMgr->createEntity("Map", "mapcementerywall.mesh");
+	Ogre::Entity* ogreMap = mSceneMgr->createEntity("Map", "virus_map.mesh");
 
 	// Create a SceneNode and attach the Entity to it
 	Ogre::SceneNode* mapNode = mSceneMgr->getRootSceneNode()->createChildSceneNode("MapNode");
-	mapNode->setPosition(Ogre::Vector3(-1250, 0, 750));
+	//mapNode->setPosition(Ogre::Vector3(-1250, 0, 750));
 	mapNode->attachObject(ogreMap);
 
 	//Create the camera that will be controlled by the HMD

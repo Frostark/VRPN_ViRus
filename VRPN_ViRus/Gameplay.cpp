@@ -121,4 +121,11 @@ namespace ViRus
 		n_enemies = 0;
 		enemies.clear();
 	}
+	void Spawner::chase(HitCharacter &h)
+	{
+		for (HitCharAttack *ptr : enemies)
+		{
+			ptr->chase(h);
+		}
+	}
 }

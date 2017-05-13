@@ -127,6 +127,8 @@ namespace ViRus
 			void spawn();
 
 			void kill_all();
+
+			void chase(HitCharacter &h);
 	};
 }
 

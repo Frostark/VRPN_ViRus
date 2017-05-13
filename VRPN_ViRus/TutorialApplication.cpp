@@ -289,6 +289,8 @@ bool TutorialApplication::processUnbufferedInput(const Ogre::FrameEvent& evt)
 
 	if (ptr_hero&&ptr_target)
 		ptr_target->chase(*ptr_hero);
+	if (ptr_hero&&spawner)
+		spawner->chase(*ptr_hero);
 
 	if (shotLeft)
 	{

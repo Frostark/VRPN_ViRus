@@ -35,6 +35,7 @@ http://www.ogre3d.org/wiki/
 
 ViRus::HitCharAttack *ptr_target;
 ViRus::HitPlayer *ptr_hero;
+ViRus::Spawner *spawner;
 
 class TutorialApplication : public BaseApplication
 {
@@ -81,6 +82,7 @@ private:
 
 	static void target_callback(ViRus::Hittable *);
 	static bool at_death_callback(ViRus::HitPlayer *player);
+	static void spawner_callback(ViRus::Hittable * h);
 
 };
 #endif // #ifndef __TutorialApplication_h_

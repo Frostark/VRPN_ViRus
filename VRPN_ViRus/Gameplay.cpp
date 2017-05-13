@@ -102,6 +102,8 @@ namespace ViRus
 
 		HitCharAttack &ref_hit = enemies.back();
 
+		ref_hit.set_callback(ptr_callback);
+
 		hitmap->add_hittable(*body->getBulletObject(), ref_hit);
 	}
 	void Spawner::kill_all()

@@ -341,6 +341,10 @@ bool TutorialApplication::at_death_callback(ViRus::HitPlayer *player)
 
 	return false;
 }
+void TutorialApplication::spawner_callback(ViRus::Hittable * h)
+{
+	spawner->callback(h);
+}
 //-------------------------------------------------------------------------------------
 
 #if OGRE_PLATFORM == OGRE_PLATFORM_WIN32

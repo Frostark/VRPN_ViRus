@@ -94,6 +94,7 @@ namespace ViRus
 			float restitution, friction, mass;//OgreBullet parameters
 
 			std::list<HitCharAttack> enemies;//List of all spawned alive enemies
+			void(*ptr_callback) (Hittable *) = nullptr;
 
 
 		public:
@@ -104,6 +105,11 @@ namespace ViRus
 			{}
 
 		public:
+
+			void set_callback(void(*icallback) (Hittable *))
+			{
+				ptr_callback = icallback;
+			}
 
 			bool need_spawn()
 			{

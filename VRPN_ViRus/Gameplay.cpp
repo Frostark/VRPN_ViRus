@@ -11,8 +11,8 @@ namespace ViRus
 	Ogre::SceneManager *Spawner::ptr_scn_mgr=nullptr;//Scene manager
 	int Spawner::total_spawned=0;//Total spawned enemies
 	HitMap *Spawner::hitmap = nullptr;//Hittable container
-	OgreBulletDynamics::DynamicsWorld *mWorld; // OgreBullet World
-	static std::default_random_engine re;
+	OgreBulletDynamics::DynamicsWorld *Spawner::mWorld=nullptr; // OgreBullet World
+	std::default_random_engine Spawner::re;//Random engine
 
 	bool Gun::fire()
 	{
@@ -75,6 +75,33 @@ namespace ViRus
 
 	void Spawner::spawn()
 	{
-		
+		std::uniform_real_distribution<> random_angle(0, Ogre::Degree(360).valueRadians());
+		double angle = random_angle(re);
+
+		Ogre::Vector2 vector(std::cos(angle), std::sin(angle));
+		vector *= spawn_radius;
+
+		Ogre::Entity *enemy = ptr_scn_mgr->createEntity("Enemy" + Ogre::StringConverter::toString(total_spawned), mesh_name);
+		enemy->setCastShadows(true);
+		Ogre::SceneNode *enemyNode = ptr_scn_mgr->getRootSceneNode()->createChildSceneNode();
+		enemyNode->attachObject(enemy);
+
+		enemyNode->scale(scale, scale, scale);
+		Ogre::Vector3 enemySize = enemy->getBoundingBox().getSize();
+		enemySize /= 2.0*scale;
+
+		Ogre::Vector3 position(vector.x, enemySize.y, vector.y);
+
+
+		OgreBulletCollisions::CylinderCollisionShape *cylinder = new OgreBulletCollisions::CylinderCollisionShape(enemySize, Ogre::Vector3::UNIT_Y);
+		OgreBulletDynamics::RigidBody *body = new OgreBulletDynamics::RigidBody("EnemyBody" + Ogre::StringConverter::toString(total_spawned), mWorld);
+		body->setShape(enemyNode, cylinder, restitution, friction, mass, position);
+		body->getBulletRigidBody()->setAngularFactor(btVector3(0, 0, 0));
+
+		enemies.emplace_back(body, cylinder, enemyNode, team, health, dmg, timeAttack, vel);
+
+		HitCharAttack &ref_hit = enemies.back();
+
+		hitmap->add_hittable(*body->getBulletObject(), ref_hit);
 	}
 }

@@ -3,12 +3,14 @@
 
 #include "OgreBulletDynamicsRigidBody.h" // for OgreBullet
 #include "Shapes/OgreBulletCollisionsBoxShape.h" // for boxes
+#include "Shapes/OgreBulletCollisionsCylinderShape.h"
 
 #include "Physics.hpp"
 #include "BaseApplication.hpp"
 #include <string>
 #include <list>
 #include <random>
+#include <cmath>
 #include "Physics.hpp"
 
 namespace ViRus
@@ -98,7 +100,7 @@ namespace ViRus
 
 			//Complete constructor
 			Spawner(Ogre::Vector3 ispawn_center, float ispawn_radius, int imax_enemies, ViRus::TeamType iteam, int ihealth, int idmg, double itimeAttack, double ivel, std::string imesh_name, double iscale, double irestitution, double ifriction, double imass)
-			:spawn_center(ispawn_center), spawn_radius(ispawn_radius), n_enemies(0), max_enemies(imax_enemies), team(iteam), health(ihealth), dmg(imdg), timeAttack(itimeAttack), vel(ivel), mesh_name(imesh_name), scale(iscale),restitution(irestitution),friction(ifriction),mass(imass),enemies()
+			:spawn_center(ispawn_center), spawn_radius(ispawn_radius), n_enemies(0), max_enemies(imax_enemies), team(iteam), health(ihealth), dmg(idmg), timeAttack(itimeAttack), vel(ivel), mesh_name(imesh_name), scale(iscale),restitution(irestitution),friction(ifriction),mass(imass),enemies()
 			{}
 
 		public:
@@ -112,9 +114,16 @@ namespace ViRus
 			{
 				hitmap->delete_hittable(*h);
 				n_enemies--;
-				HitCharAttack &ref_h = *static_cast<HitCharAttack *>(h);
 
-				enemies.remove(ref_h);
+				for (auto it = enemies.begin(); it != enemies.end(); ++it)
+				{
+					HitCharAttack *ptr = &(*it);
+					if (ptr == h)
+					{
+						enemies.erase(it);
+						break;
+					}
+				}
 			}
 
 			void spawn();

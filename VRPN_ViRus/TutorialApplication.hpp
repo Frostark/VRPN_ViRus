@@ -33,7 +33,6 @@ http://www.ogre3d.org/wiki/
 #include "Shapes/OgreBulletCollisionsBoxShape.h" // for boxes
 #include "Shapes/OgreBulletCollisionsCylinderShape.h" // for cylinders
 
-ViRus::HitCharAttack *ptr_target;
 ViRus::HitPlayer *ptr_hero;
 ViRus::Spawner *spawner;
 

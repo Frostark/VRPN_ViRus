@@ -107,6 +107,7 @@ namespace ViRus
 		hitmap->add_hittable(*body->getBulletObject(), ref_hit);
 
 		n_enemies++;
+		total_spawned++;
 	}
 	void Spawner::kill_all()
 	{

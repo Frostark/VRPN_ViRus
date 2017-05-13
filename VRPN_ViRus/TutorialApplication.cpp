@@ -38,6 +38,16 @@ void TutorialApplication::createScene(void)
 		Ogre::AxisAlignedBox(Ogre::Vector3(-10000, -10000, -10000), Ogre::Vector3(10000, 10000, 10000)), //aligned box for Bullet
 		Ogre::Vector3(0, -9.81, 0)); // gravity vector for Bullet
 
+	//Load the map
+
+	// Create an Entity
+	Ogre::Entity* ogreMap = mSceneMgr->createEntity("Map", "mapcementerywall.mesh");
+
+	// Create a SceneNode and attach the Entity to it
+	Ogre::SceneNode* mapNode = mSceneMgr->getRootSceneNode()->createChildSceneNode("MapNode");
+	mapNode->setPosition(Ogre::Vector3(-1250, 0, 750));
+	mapNode->attachObject(ogreMap);
+
 	//Create the camera that will be controlled by the HMD
 	Ogre::Camera* newCamera = mSceneMgr->createCamera("NewCam");
 	mWindow->getViewport(0)->setCamera(newCamera);

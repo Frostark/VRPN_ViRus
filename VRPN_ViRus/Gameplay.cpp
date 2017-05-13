@@ -88,7 +88,7 @@ namespace ViRus
 
 		enemyNode->scale(scale, scale, scale);
 		Ogre::Vector3 enemySize = enemy->getBoundingBox().getSize();
-		enemySize /= 2.0*scale;
+		enemySize *= 0.5*scale;
 
 		Ogre::Vector3 position(vector.x, enemySize.y, vector.y);
 

@@ -137,6 +137,24 @@ void TutorialApplication::createScene(void)
 	//Right gun
 	right_gun = new ViRus::Gun(rightHandNode, "Barrel.mesh");
 
+	//Spawner
+
+	ViRus::Spawner::hitmap = &hitmap;
+	ViRus::Spawner::mWorld = mWorld;
+	ViRus::Spawner::ptr_scn_mgr = mSceneMgr;
+
+	constexpr int MAX_ENEMIES = 5;
+	constexpr int ENE_HEALTH = 50;
+	constexpr int ENE_DMG = 10;
+	constexpr float ENE_TIME_ATTACK = 2.0;
+	constexpr float ENE_VEL = 4;
+	constexpr float ENE_SCALE = 1.8 / 200.0;
+	constexpr float ENE_RESTITUTION = 0.1;
+	constexpr float ENE_FRICTION = 5.0;
+	constexpr float ENE_MASS = 10.0;
+	spawner = new ViRus::Spawner(Ogre::Vector3::ZERO, 10, MAX_ENEMIES, ViRus::TeamType::ENEMY, ENE_HEALTH, ENE_DMG, ENE_TIME_ATTACK, ENE_VEL, "ninja.mesh", ENE_SCALE, ENE_RESTITUTION, ENE_FRICTION, ENE_MASS);
+	spawner->set_callback(spawner_callback);
+
 
 	static constexpr double PENGUIN_SCALING = 0.04;
 
@@ -263,6 +281,9 @@ bool TutorialApplication::processUnbufferedInput(const Ogre::FrameEvent& evt)
 
 		hitmap.handle_collision(obA, obB);
 	}
+
+	while (spawner->need_spawn())
+		spawner->spawn();
 
 	hitmap.clean_queued();
 

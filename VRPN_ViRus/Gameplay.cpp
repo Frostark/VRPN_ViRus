@@ -105,6 +105,8 @@ namespace ViRus
 		ref_hit.set_callback(ptr_callback);
 
 		hitmap->add_hittable(*body->getBulletObject(), ref_hit);
+
+		n_enemies++;
 	}
 	void Spawner::kill_all()
 	{
@@ -112,7 +114,7 @@ namespace ViRus
 		{
 			hitmap->delete_hittable(ref);
 		}
-
+		n_enemies = 0;
 		enemies.clear();
 	}
 }

@@ -204,6 +204,7 @@ namespace ViRus
 		if (scene&&body)
 		{
 			Ogre::Vector3 dir = pos - scene->getPosition();
+			dir.y = 0;
 			dir.normalise();
 
 			scene->lookAt(pos, Ogre::Node::TS_WORLD);

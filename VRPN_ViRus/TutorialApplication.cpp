@@ -47,7 +47,7 @@ void TutorialApplication::createScene(void)
 	Ogre::ColourValue fadeColour(.9, .9, .9);
 	mWindow->getViewport(0)->setBackgroundColour(fadeColour);
 
-	mSceneMgr->setFog(Ogre::FOG_EXP2, fadeColour, 0.002);
+	mSceneMgr->setFog(Ogre::FOG_EXP2, fadeColour, 0.1);
 
 	// Create an Entity
 	Ogre::Entity* ogreMap = mSceneMgr->createEntity("Map", "virus_map.mesh");
@@ -221,8 +221,9 @@ void TutorialApplication::createScene(void)
 	HMDbody->setKinematicObject(true);
 	HMDbody->disableDeactivation();
 
-	ptr_hero = new ViRus::HitCharacter(HMDbody, HMDCylinder, HMDNode, ViRus::TeamType::HERO, 100);
+	ptr_hero = new ViRus::HitPlayer(HMDbody, HMDCylinder, HMDNode, ViRus::TeamType::HERO, 100);
 	ptr_hero->set_callback(target_callback);
+	ptr_hero->set_at_death(at_death_callback);
 
 	hitmap.add_hittable(*HMDbody->getBulletObject(), *ptr_hero);
 
@@ -355,6 +356,12 @@ void TutorialApplication::target_callback(ViRus::Hittable *h)
 		ptr_target = nullptr;
 	else if (h == ptr_hero)
 		ptr_hero = nullptr;
+}
+bool TutorialApplication::at_death_callback(ViRus::HitPlayer *player)
+{
+	player->revive();
+
+	return false;
 }
 //-------------------------------------------------------------------------------------
 

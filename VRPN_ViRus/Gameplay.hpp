@@ -93,7 +93,7 @@ namespace ViRus
 
 			float restitution, friction, mass;//OgreBullet parameters
 
-			std::list<HitCharAttack> enemies;//List of all spawned alive enemies
+			std::list<HitCharAttack *> enemies;//List of all spawned alive enemies
 			void(*ptr_callback) (Hittable *) = nullptr;
 
 
@@ -121,15 +121,7 @@ namespace ViRus
 				hitmap->delete_hittable(*h);
 				n_enemies--;
 
-				for (auto it = enemies.begin(); it != enemies.end(); ++it)
-				{
-					HitCharAttack *ptr = &(*it);
-					if (ptr == h)
-					{
-						enemies.erase(it);
-						break;
-					}
-				}
+				enemies.remove(static_cast<HitCharAttack *>(h));
 			}
 
 			void spawn();

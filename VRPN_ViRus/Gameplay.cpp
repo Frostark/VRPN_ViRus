@@ -98,22 +98,21 @@ namespace ViRus
 		body->setShape(enemyNode, cylinder, restitution, friction, mass, position);
 		body->getBulletRigidBody()->setAngularFactor(btVector3(0, 0, 0));
 
-		enemies.emplace_back(body, cylinder, enemyNode, team, health, dmg, timeAttack, vel);
+		HitCharAttack *ptr = new HitCharAttack(body, cylinder, enemyNode, team, health, dmg, timeAttack, vel);
 
-		HitCharAttack &ref_hit = enemies.back();
+		ptr->set_callback(ptr_callback);
+		enemies.push_back(ptr);
 
-		ref_hit.set_callback(ptr_callback);
-
-		hitmap->add_hittable(*body->getBulletObject(), ref_hit);
+		hitmap->add_hittable(*body->getBulletObject(), *ptr);
 
 		n_enemies++;
 		total_spawned++;
 	}
 	void Spawner::kill_all()
 	{
-		for (HitCharAttack &ref : enemies)
+		for (HitCharAttack *ptr : enemies)
 		{
-			hitmap->delete_hittable(ref);
+			hitmap->delete_hittable(*ptr);
 		}
 		n_enemies = 0;
 		enemies.clear();

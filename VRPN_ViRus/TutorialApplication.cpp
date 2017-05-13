@@ -43,6 +43,12 @@ void TutorialApplication::createScene(void)
 
 	//Load the map
 
+	//Set fog
+	Ogre::ColourValue fadeColour(.9, .9, .9);
+	mWindow->getViewport(0)->setBackgroundColour(fadeColour);
+
+	mSceneMgr->setFog(Ogre::FOG_EXP2, fadeColour, 0.002);
+
 	// Create an Entity
 	Ogre::Entity* ogreMap = mSceneMgr->createEntity("Map", "virus_map.mesh");
 

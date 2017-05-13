@@ -207,7 +207,12 @@ namespace ViRus
 			dir.y = 0;
 			dir.normalise();
 
-			scene->lookAt(pos, Ogre::Node::TS_WORLD);
+			Ogre::Vector2 dir_2d(dir.x, dir.z);
+
+			Ogre::Radian angle = dir_2d.angleTo(Ogre::Vector2::NEGATIVE_UNIT_Y);
+			scene->resetOrientation();
+			scene->yaw(angle);
+
 			body->setLinearVelocity(dir*vel);
 		}
 	}

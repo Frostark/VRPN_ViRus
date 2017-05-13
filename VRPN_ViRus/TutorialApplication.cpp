@@ -205,7 +205,7 @@ void TutorialApplication::createScene(void)
 
 	// Push the created objects to the deques
 
-	ptr_target = new ViRus::HitCharacter(penguinBody, penguinShape, penguinNode, ViRus::TeamType::ENEMY, 40);
+	ptr_target = new ViRus::HitCharAttack(penguinBody, penguinShape, penguinNode, ViRus::TeamType::ENEMY, 40, 20);
 	ptr_target->set_callback(target_callback);
 
 	hitmap.add_hittable(*penguinBody->getBulletObject(), *ptr_target);
@@ -290,6 +290,9 @@ bool TutorialApplication::processUnbufferedInput(const Ogre::FrameEvent& evt)
 	}
 
 	hitmap.clean_queued();
+
+	if (ptr_hero&&ptr_target)
+		ptr_target->chase(*ptr_hero);
 
 	if (shotLeft)
 	{

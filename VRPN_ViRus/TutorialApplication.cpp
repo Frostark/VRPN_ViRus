@@ -219,8 +219,9 @@ void TutorialApplication::createScene(void)
 	OgreBulletCollisions::CylinderCollisionShape *HMDCylinder = new OgreBulletCollisions::CylinderCollisionShape(HMD_cylinder_size, Ogre::Vector3::UNIT_Y);
 
 	OgreBulletDynamics::RigidBody *HMDbody = new OgreBulletDynamics::RigidBody("HMDbody", mWorld);
-	std::ofstream("output.txt") << "(" << HMDNode->getPosition().x << "," << HMDNode->getPosition().y << "," << HMDNode->getPosition().z << ")";
-	HMDbody->setStaticShape(HMDNode, HMDCylinder, 0.6, 0.6,HMDNode->getPosition(),HMDNode->getOrientation());
+	Ogre::Vector3 HMDpos = HMDNode->getPosition() + Ogre::Vector3(0, -HMD_cylinder_size.y, 0);
+	Ogre::Quaternion HMDrot = HMDNode->getOrientation();
+	HMDbody->setStaticShape(HMDNode, HMDCylinder, 0.6, 0.6,HMDpos,HMDrot);
 	HMDbody->setKinematicObject(true);
 	HMDbody->disableDeactivation();
 

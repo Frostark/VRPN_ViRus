@@ -120,6 +120,11 @@ namespace ViRus
 		clean_up.clear();
 	}
 
+	void HitMap::delete_hittable(Hittable & h)
+	{
+		clean_up.insert(h.body->getBulletObject());
+	}
+
 	void HitMap::clear_all()
 	{
 		for (auto &it : hittables)

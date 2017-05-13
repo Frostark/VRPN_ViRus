@@ -48,7 +48,7 @@ void TutorialApplication::createScene(void)
 
 	// Create a SceneNode and attach the Entity to it
 	Ogre::SceneNode* mapNode = mSceneMgr->getRootSceneNode()->createChildSceneNode("MapNode");
-	//mapNode->setPosition(Ogre::Vector3(-1250, 0, 750));
+	mapNode->setPosition(Ogre::Vector3(-17, 0.0, 16));
 	mapNode->attachObject(ogreMap);
 
 

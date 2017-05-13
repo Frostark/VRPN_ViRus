@@ -34,7 +34,7 @@ http://www.ogre3d.org/wiki/
 #include "Shapes/OgreBulletCollisionsCylinderShape.h" // for cylinders
 
 ViRus::HitCharAttack *ptr_target;
-ViRus::HitCharacter *ptr_hero;
+ViRus::HitPlayer *ptr_hero;
 
 class TutorialApplication : public BaseApplication
 {
@@ -80,6 +80,7 @@ private:
 	ViRus::Gun *right_gun;
 
 	static void target_callback(ViRus::Hittable *);
+	static bool at_death_callback(ViRus::HitPlayer *player);
 
 };
 #endif // #ifndef __TutorialApplication_h_

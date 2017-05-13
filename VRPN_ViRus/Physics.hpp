@@ -36,6 +36,7 @@ namespace ViRus
 	class HitProjectile;//Projectile that can hit objects
 	class HitCharacter;//Character that can be hit
 	class HitCharAttack;//Character that hits others upon contact
+	class HitPlayer;//Character of the player
 	class HitMap;//Map that goes from the physics object to the hittable object
 
 	//Class definitions
@@ -235,6 +236,48 @@ namespace ViRus
 			void chase(const HitCharacter &h);
 
 	};
+
+	//Character of the player
+	class HitPlayer : public HitCharacter
+	{
+		private:
+			bool(*at_death) (HitPlayer *);//Call this function on finished(), when the player dies. Return the value that this callback returns
+			int init_health;//Initial health
+
+		public:
+
+			//Complete constructor
+			HitPlayer(OgreBulletDynamics::RigidBody *ibody, OgreBulletCollisions::CollisionShape *ishape, Ogre::SceneNode *iscene, TeamType iteam, int ihealth)
+			:HitCharacter(ibody,ishape,iscene,iteam,ihealth), at_death(nullptr), init_health(ihealth)
+			{}
+
+		public:
+
+			//Set at_death callback
+			void set_at_death(bool(*iat_death) (HitPlayer *))
+			{
+				at_death = iat_death;
+			}
+
+			//Return true if this hittable is done and can be removed from the map
+			bool finished()
+			{
+				if (HitCharacter::finished())
+				{
+					if (at_death)
+						return at_death(this);
+					else
+						return true;
+				}
+				return false;
+			}
+
+			void revive()
+			{
+				health = init_health;
+			}
+	};
+
 
 
 	//Map that goes from the physics object to the hittable object

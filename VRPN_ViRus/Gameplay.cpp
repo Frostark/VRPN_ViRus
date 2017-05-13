@@ -128,4 +128,10 @@ namespace ViRus
 			ptr->chase(h);
 		}
 	}
+
+	void Spawner::deltaTime(double itime)
+	{
+		for (HitCharAttack * ptr : enemies)
+			ptr->deltaTime(itime);
+	}
 }

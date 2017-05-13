@@ -234,13 +234,19 @@ bool TutorialApplication::processUnbufferedInput(const Ogre::FrameEvent& evt)
 		hitmap.handle_collision(obA, obB);
 	}
 
-	while (spawner->need_spawn())
-		spawner->spawn();
+	if (spawner)
+		while (spawner->need_spawn())
+			spawner->spawn();
 
 	hitmap.clean_queued();
 
-	if (ptr_hero&&spawner)
-		spawner->chase(*ptr_hero);
+	if (spawner)
+	{
+		if (ptr_hero)
+			spawner->chase(*ptr_hero);
+
+		spawner->deltaTime(evt.timeSinceLastFrame);
+	}
 
 	if (shotLeft)
 	{
@@ -309,6 +315,8 @@ void TutorialApplication::target_callback(ViRus::Hittable *h)
 bool TutorialApplication::at_death_callback(ViRus::HitPlayer *player)
 {
 	player->revive();
+	if (spawner)
+		spawner->kill_all();
 
 	return false;
 }

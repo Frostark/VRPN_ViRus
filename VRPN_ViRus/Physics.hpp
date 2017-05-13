@@ -48,6 +48,8 @@ namespace ViRus
 			//Pointer to the scene manager, needed to clean up hittables. Needs to be set to the current scene manager before using HitMap
 			static Ogre::SceneManager *ptr_scn_mgr;
 
+			friend class HitMap;
+
 		protected:
 				//Pointers to clean up at deletion, callback
 				OgreBulletDynamics::RigidBody *body;
@@ -302,6 +304,9 @@ namespace ViRus
 
 			//Delete pointers queued for destroctions
 			void clean_queued();
+
+			//Destroy a hittable
+			void delete_hittable(Hittable &h);
 
 		public:
 

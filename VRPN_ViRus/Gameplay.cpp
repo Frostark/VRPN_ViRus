@@ -8,6 +8,12 @@ namespace ViRus
 	HitMap *Gun::hitmap=nullptr;
 	OgreBulletDynamics::DynamicsWorld *Gun::mWorld=nullptr; // OgreBullet World
 
+	Ogre::SceneManager *Spawner::ptr_scn_mgr=nullptr;//Scene manager
+	int Spawner::total_spawned=0;//Total spawned enemies
+	HitMap *Spawner::hitmap = nullptr;//Hittable container
+	OgreBulletDynamics::DynamicsWorld *mWorld; // OgreBullet World
+	static std::default_random_engine re;
+
 	bool Gun::fire()
 	{
 		if (!delta_time)
@@ -65,5 +71,10 @@ namespace ViRus
 		delta_time -= delta;
 		if (delta_time < 0)
 			delta_time = 0;
+	}
+
+	void Spawner::spawn()
+	{
+		
 	}
 }

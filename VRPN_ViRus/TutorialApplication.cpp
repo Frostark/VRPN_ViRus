@@ -41,6 +41,17 @@ void TutorialApplication::createScene(void)
 		Ogre::AxisAlignedBox(Ogre::Vector3(-10000, -10000, -10000), Ogre::Vector3(10000, 10000, 10000)), //aligned box for Bullet
 		Ogre::Vector3(0, -9.81, 0)); // gravity vector for Bullet
 
+	//Load the map
+
+	// Create an Entity
+	Ogre::Entity* ogreMap = mSceneMgr->createEntity("Map", "mapcementerywall.mesh");
+
+	// Create a SceneNode and attach the Entity to it
+	Ogre::SceneNode* mapNode = mSceneMgr->getRootSceneNode()->createChildSceneNode("MapNode");
+	mapNode->setPosition(Ogre::Vector3(-1250, 0, 750));
+	mapNode->attachObject(ogreMap);
+
+
 	debugDrawer = new OgreBulletCollisions::DebugDrawer();
 	debugDrawer->setDrawWireframe(true); // we want to see the Bullet shapes
 
@@ -198,7 +209,7 @@ void TutorialApplication::createScene(void)
 	penguinBody->setShape(penguinNode, penguinShape, 0.1f, 5.0f, 10.0f, // (node, shape, restitution, friction, mass
 		penguinPosition, penguinOrientation); // starting position, orientation)
 
-
+	penguinBody->getBulletRigidBody()->setAngularFactor(btVector3(0, 0, 0));
 	penguinNode->translate(Ogre::Vector3(0, 0, -5));
 
 	// Push the created objects to the deques

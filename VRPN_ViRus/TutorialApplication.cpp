@@ -184,7 +184,7 @@ void TutorialApplication::createScene(void)
 
 	// Push the created objects to the deques
 
-	ptr_target = new ViRus::HitCharacter(penguinBody, penguinShape, penguinNode, ViRus::TeamType::ENEMY, 40);
+	ptr_target = new ViRus::HitCharAttack(penguinBody, penguinShape, penguinNode, ViRus::TeamType::ENEMY, 40, 20);
 	ptr_target->set_callback(target_callback);
 
 	hitmap.add_hittable(*penguinBody->getBulletObject(), *ptr_target);
@@ -197,7 +197,7 @@ void TutorialApplication::createScene(void)
 	OgreBulletCollisions::CylinderCollisionShape *HMDCylinder = new OgreBulletCollisions::CylinderCollisionShape(HMD_cylinder_size, Ogre::Vector3::UNIT_Y);
 
 	OgreBulletDynamics::RigidBody *HMDbody = new OgreBulletDynamics::RigidBody("HMDbody", mWorld);
-	Ogre::Vector3 HMDpos = HMDNode->getPosition() + Ogre::Vector3(0, -HMD_cylinder_size.y / 2, 0);
+	Ogre::Vector3 HMDpos = HMDNode->getPosition() + Ogre::Vector3(0, -HMD_cylinder_size.y, 0);
 	Ogre::Quaternion HMDrot = HMDNode->getOrientation();
 	HMDbody->setStaticShape(HMDNode, HMDCylinder, 0.6, 0.6,HMDpos,HMDrot);
 	HMDbody->setKinematicObject(true);
@@ -268,6 +268,9 @@ bool TutorialApplication::processUnbufferedInput(const Ogre::FrameEvent& evt)
 	}
 
 	hitmap.clean_queued();
+
+	if (ptr_hero&&ptr_target)
+		ptr_target->chase(*ptr_hero);
 
 	if (shotLeft)
 	{

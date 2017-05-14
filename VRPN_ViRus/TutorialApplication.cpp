@@ -165,7 +165,7 @@ void TutorialApplication::createScene(void)
 	HMD_cylinder_size /= 2.0;
 	OgreBulletCollisions::CylinderCollisionShape *HMDCylinder = new OgreBulletCollisions::CylinderCollisionShape(HMD_cylinder_size, Ogre::Vector3::UNIT_Y);
 
-	OgreBulletDynamics::RigidBody *HMDbody = new OgreBulletDynamics::RigidBody("HMDbody", mWorld);
+	OgreBulletDynamics::RigidBody *HMDbody = new OgreBulletDynamics::RigidBody("HMDbody", mWorld,ViRus::ColliderType::HERO,ViRus::ColliderType::ENEMY|ViRus::ColliderType::POWERUP);
 	Ogre::Vector3 HMDpos = HMDNode->getPosition() + Ogre::Vector3(0, -HMD_cylinder_size.y, 0);
 	Ogre::Quaternion HMDrot = HMDNode->getOrientation();
 	HMDbody->setStaticShape(HMDNode, HMDCylinder, 0.6, 0.6,HMDpos,HMDrot);

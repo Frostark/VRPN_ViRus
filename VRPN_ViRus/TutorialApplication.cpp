@@ -154,9 +154,11 @@ void TutorialApplication::createScene(void)
 
 	//Left gun
 	left_gun = new ViRus::Gun(leftHandNode, "Barrel.mesh");
+	left_gun->set_callback(left_gun_callback);
 
 	//Right gun
 	right_gun = new ViRus::Gun(rightHandNode, "Barrel.mesh");
+	right_gun->set_callback(right_gun_callback);
 
 	//Spawner
 
@@ -383,6 +385,16 @@ bool TutorialApplication::at_death_callback(ViRus::HitPlayer *player)
 void TutorialApplication::spawner_callback(ViRus::Hittable * h)
 {
 	spawner->callback(h);
+}
+void TutorialApplication::left_gun_callback(ViRus::Hittable * h)
+{
+	if (left_gun)
+		left_gun->callback(h);
+}
+void TutorialApplication::right_gun_callback(ViRus::Hittable * h)
+{
+	if (right_gun)
+		right_gun->callback(h);
 }
 //-------------------------------------------------------------------------------------
 

@@ -138,12 +138,13 @@ namespace ViRus
 		private:
 			bool isFinished = false;//Bullet has hit something, and despawns
 			int dmg;//Damage that this bullet deals upon hitting a character
+			float ttl;//Time to live
 
 		public:
 
 			//Complete constructor
-			HitProjectile(OgreBulletDynamics::RigidBody *ibody, OgreBulletCollisions::CollisionShape *ishape, Ogre::SceneNode *iscene, TeamType iteam, int idmg=0)
-			:Hittable(ibody,ishape,iscene), Teamable(iteam), dmg(idmg)
+			HitProjectile(OgreBulletDynamics::RigidBody *ibody, OgreBulletCollisions::CollisionShape *ishape, Ogre::SceneNode *iscene, TeamType iteam, int idmg=0, float ittl=1.0f)
+			:Hittable(ibody,ishape,iscene), Teamable(iteam), dmg(idmg), ttl(ittl)
 			{}
 
 			//Virtual destructor
@@ -159,6 +160,15 @@ namespace ViRus
 			{
 				return isFinished;
 			}
+
+			//Update the ttl with the given times
+			void deltaTime(double itime)
+			{
+				ttl -= itime;
+				if (itime < 0)
+					isFinished = true;
+			}
+
 	};
 
 	//Character that can be hit

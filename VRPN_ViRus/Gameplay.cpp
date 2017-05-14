@@ -57,7 +57,9 @@ namespace ViRus
 
 			// Push the created objects to the deques
 
-			ViRus::Hittable *bulletHittable = new ViRus::HitProjectile(bulletBody, bulletShape, bulletNode, ViRus::TeamType::HERO, dmg);
+			ViRus::HitProjectile *bulletHittable = new ViRus::HitProjectile(bulletBody, bulletShape, bulletNode, ViRus::TeamType::HERO, dmg);
+			bulletHittable->set_callback(ptr_callback);
+			bullets.push_back(bulletHittable);
 			hitmap->add_hittable(*bulletBody->getBulletObject(), *bulletHittable);
 
 			delta_time = max_delta;
@@ -71,6 +73,21 @@ namespace ViRus
 		delta_time -= delta;
 		if (delta_time < 0)
 			delta_time = 0;
+
+		for (HitProjectile *bullet : bullets)
+			bullet->deltaTime(delta);
+	}
+
+	void Gun::callback(Hittable * h)
+	{
+		HitProjectile *bullet = static_cast<HitProjectile *>(h);
+
+		bullets.remove(bullet);
+	}
+
+	void Gun::set_callback(void(*iptr_callback)(Hittable *))
+	{
+		ptr_callback = iptr_callback;
 	}
 
 	void Spawner::spawn()

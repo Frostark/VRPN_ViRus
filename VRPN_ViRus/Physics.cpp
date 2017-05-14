@@ -374,6 +374,6 @@ namespace ViRus
 	void HitMedkit::delta_time(double itime)
 	{
 		if (scene)
-			scene->yaw(Ogre::Radian(itime));
+			scene->yaw(0*Ogre::Radian(itime));
 	}
 }

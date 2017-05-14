@@ -43,12 +43,14 @@ namespace ViRus
 		double speed;//Speed of the bullet
 		double mass;//Mass of the bullet
 		double delta_time, max_delta;//Current time since last shot
+		std::list<HitProjectile *> bullets;//List of active bullets
+		void(*ptr_callback) (Hittable *) = nullptr;
 
 	public:
 
 		//Complete constructor
 		Gun(Ogre::SceneNode *ibarrel, std::string imesh_name, double iscale = DEF_SCALE, double idmg = DEF_DMG, double ispeed = DEF_SPEED, double imass = DEF_MASS, double imax_delta = DEF_MAX_TIME)
-			:barrel(ibarrel), mesh_name(imesh_name), scale(iscale), dmg(idmg), speed(ispeed), mass(imass), delta_time(0), max_delta(imax_delta)
+			:barrel(ibarrel), mesh_name(imesh_name), scale(iscale), dmg(idmg), speed(ispeed), mass(imass), delta_time(0), max_delta(imax_delta), bullets()
 		{}
 
 		//Virtual distructor
@@ -59,6 +61,10 @@ namespace ViRus
 		virtual bool fire();//Fire the gun if possible, return true if it fired
 
 		void refresh(double delta);//Refresh the gun's delta
+
+		void callback(Hittable *h);//Gun callback, remove the bullet
+
+		void set_callback(void(*ptr_callback) (Hittable *));
 
 	};
 

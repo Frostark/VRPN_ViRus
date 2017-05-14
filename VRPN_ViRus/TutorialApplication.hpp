@@ -35,6 +35,8 @@ http://www.ogre3d.org/wiki/
 
 ViRus::HitPlayer *ptr_hero;
 ViRus::Spawner *spawner;
+ViRus::Gun *left_gun;
+ViRus::Gun *right_gun;
 
 class TutorialApplication : public BaseApplication
 {
@@ -76,13 +78,12 @@ private:
 	int mNumEntitiesInstanced;
 
 	ViRus::HitMap hitmap;
-	ViRus::Gun *left_gun;
-	ViRus::Gun *right_gun;
 
 	static void target_callback(ViRus::Hittable *);
 	static bool at_death_callback(ViRus::HitPlayer *player);
 	static void spawner_callback(ViRus::Hittable * h);
-
+	static void left_gun_callback(ViRus::Hittable *h);
+	static void right_gun_callback(ViRus::Hittable *h);
 };
 #endif // #ifndef __TutorialApplication_h_
 

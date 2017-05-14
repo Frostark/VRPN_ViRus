@@ -201,7 +201,33 @@ namespace ViRus
 
 	void HitCharAttack::deltaTime(double itime)
 	{
-		anim_controller->addTime(itime);
+		Ogre::Entity *ent = get_entity();
+		if (ent)
+		{
+			switch(anim)
+			{
+				case ViRus::CharacterAnimState::START:
+					anim = CharacterAnimState::WALK;
+					anim_controller = entity->getAnimationState("Walk");
+					anim_controller->setLoop(true);
+					anim_controller->setEnabled(true);
+					break;
+				case ViRus::CharacterAnimState::WALK:
+					break;
+				case ViRus::CharacterAnimState::ATTACK:
+					break;
+				case ViRus::CharacterAnimState::DEATH:
+					break;
+				case ViRus::CharacterAnimState::END:
+					break;
+				default:
+					break;
+			}
+
+			if (anim_controller)
+				anim_controller->addTime(itime);
+		}
+
 
 		deltaAttack -= itime;
 		deltaAttack = std::max(0.0, deltaAttack);
@@ -232,8 +258,11 @@ namespace ViRus
 
 	Ogre::Entity * HitCharAttack::get_entity()
 	{
-		Ogre::SceneNode *entityNode = (Ogre::SceneNode *)scene->getChildIterator().getNext();
-		return (Ogre::Entity *)entityNode->getAttachedObjectIterator().getNext();
+		return entity;
+	}
+	void HitCharAttack::set_entity(Ogre::Entity * ientity)
+	{
+		entity = ientity;
 	}
 	bool HitCharacter::get_position(Ogre::Vector3 & pos) const
 	{

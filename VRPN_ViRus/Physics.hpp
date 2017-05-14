@@ -200,7 +200,8 @@ namespace ViRus
 
 	enum class CharacterAnimState : int
 	{
-		WALK=0,
+		START=0,
+		WALK,
 		ATTACK,
 		DEATH,
 		END
@@ -221,16 +222,14 @@ namespace ViRus
 			double vel;//Velocity of the character
 			CharacterAnimState anim;
 			Ogre::AnimationState *anim_controller;
+			Ogre::Entity *entity;
 
 		public:
 
 			//Complete constructor
 			HitCharAttack(OgreBulletDynamics::RigidBody *ibody, OgreBulletCollisions::CollisionShape *ishape, Ogre::SceneNode *iscene, TeamType iteam, int ihealth, int idmg, double itimeAttack = DEF_ATTACK_TIME, double ivel = DEF_VEL)
-			:HitCharacter(ibody, ishape, iscene, iteam, ihealth), dmg(idmg), timeAttack(itimeAttack), vel(ivel), anim(CharacterAnimState::WALK),anim_controller(nullptr)
+			:HitCharacter(ibody, ishape, iscene, iteam, ihealth), dmg(idmg), timeAttack(itimeAttack), vel(ivel), anim(CharacterAnimState::START),anim_controller(nullptr),entity(nullptr)
 			{
-				anim_controller = get_entity()->getAnimationState("Walk");
-				anim_controller->setLoop(true);
-				anim_controller->setEnabled(true);
 			}
 
 			//Virtual destructor
@@ -254,6 +253,9 @@ namespace ViRus
 
 			//Get the entity
 			Ogre::Entity *get_entity();
+
+			//Set the entity
+			void set_entity(Ogre::Entity *ientity);
 
 	};
 

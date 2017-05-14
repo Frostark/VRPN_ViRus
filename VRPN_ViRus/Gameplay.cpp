@@ -146,6 +146,11 @@ namespace ViRus
 		{
 			hitmap->delete_hittable(*ptr);
 		}
+
+		for (HitPickup *ptr : pickups)
+		{
+			hitmap->delete_hittable(*ptr);
+		}
 	}
 	void Spawner::chase(HitCharacter &h)
 	{

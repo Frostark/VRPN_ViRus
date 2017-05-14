@@ -155,8 +155,9 @@ void TutorialApplication::createScene(void)
 	constexpr float ENE_FRICTION = 5.0;
 	constexpr float ENE_MASS = 10.0;
 	constexpr float ENE_MAX_WAIT_TIME = 1.25;
-	spawner = new ViRus::Spawner(Ogre::Vector3::ZERO, 10, MAX_ENEMIES, ViRus::TeamType::ENEMY, ENE_HEALTH, ENE_DMG, ENE_TIME_ATTACK, ENE_VEL, "ninja.mesh", ENE_SCALE, ENE_RESTITUTION, ENE_FRICTION, ENE_MASS, ENE_MAX_WAIT_TIME);
+	spawner = new ViRus::Spawner(Ogre::Vector3::ZERO, 10, MAX_ENEMIES, ViRus::TeamType::ENEMY, ENE_HEALTH, ENE_DMG, ENE_TIME_ATTACK, ENE_VEL, "ninja.mesh", ENE_SCALE, ENE_RESTITUTION, ENE_FRICTION, ENE_MASS, ENE_MAX_WAIT_TIME, 0.4, "medkit.mesh");
 	spawner->set_callback(spawner_callback);
+	spawner->set_pickup_callback(pickup_callback);
 
 	//Character physics
 
@@ -336,6 +337,10 @@ void TutorialApplication::right_gun_callback(ViRus::Hittable * h)
 {
 	if (right_gun)
 		right_gun->callback(h);
+}
+void TutorialApplication::pickup_callback(ViRus::Hittable * h)
+{
+	spawner->medkit_callback(h);
 }
 //-------------------------------------------------------------------------------------
 

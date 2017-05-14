@@ -62,7 +62,7 @@ void TutorialApplication::createScene(void)
 	floorShape = new OgreBulletCollisions::StaticPlaneCollisionShape(Ogre::Vector3::UNIT_Y, 0); // (normal vector, distance)
 
 	// A rigid body is needed for the shape
-	OgreBulletDynamics::RigidBody *floorBody = new OgreBulletDynamics::RigidBody("FloorBody", mWorld);
+	OgreBulletDynamics::RigidBody *floorBody = new OgreBulletDynamics::RigidBody("FloorBody", mWorld, ViRus::ColliderType::OBSTACLE, ViRus::ColliderType::ENEMY | ViRus::ColliderType::HERO|ViRus::ColliderType::POWERUP);
 	floorBody->setStaticShape(floorShape, 0.1, 0.8); // (shape, restitution, friction)
 
 	// Push the created objects to the deques
@@ -187,7 +187,7 @@ void TutorialApplication::createScene(void)
 	
 	OgreBulletCollisions::CylinderCollisionShape *HMDCylinder = new OgreBulletCollisions::CylinderCollisionShape(HMD_cylinder_size, Ogre::Vector3::UNIT_Y);
 
-	OgreBulletDynamics::RigidBody *HMDbody = new OgreBulletDynamics::RigidBody("HMDbody", mWorld,ViRus::ColliderType::HERO,ViRus::ColliderType::ENEMY|ViRus::ColliderType::POWERUP);
+	OgreBulletDynamics::RigidBody *HMDbody = new OgreBulletDynamics::RigidBody("HMDbody", mWorld, ViRus::ColliderType::HERO, ViRus::ColliderType::ENEMY | ViRus::ColliderType::POWERUP | ViRus::ColliderType::OBSTACLE);
 	Ogre::Vector3 HMDpos = HMDNode->getPosition() + Ogre::Vector3(0, -HMD_cylinder_size.y, 0);
 	Ogre::Quaternion HMDrot = HMDNode->getOrientation();
 	HMDbody->setStaticShape(HMDNode, HMDCylinder, 0.6, 0.6,HMDpos,HMDrot);

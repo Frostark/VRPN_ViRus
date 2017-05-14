@@ -49,7 +49,7 @@ namespace ViRus
 			OgreBulletCollisions::BoxCollisionShape *bulletShape = new OgreBulletCollisions::BoxCollisionShape(bulletShapeSize);
 
 			// and the Bullet rigid body
-			OgreBulletDynamics::RigidBody *bulletBody = new OgreBulletDynamics::RigidBody("defaultBoxRigid" + Ogre::StringConverter::toString(numBullets), mWorld, ColliderType::ENEMY, ColliderType::ENEMY|ColliderType::HERO);
+			OgreBulletDynamics::RigidBody *bulletBody = new OgreBulletDynamics::RigidBody("defaultBoxRigid" + Ogre::StringConverter::toString(numBullets), mWorld, ColliderType::HERO, ColliderType::ENEMY|ColliderType::OBSTACLE);
 			bulletBody->setShape(bulletNode, bulletShape,
 				0.6f, // dynamic body restitution
 				0.6f, // dynamic body friction
@@ -124,7 +124,7 @@ namespace ViRus
 
 
 		OgreBulletCollisions::CylinderCollisionShape *cylinder = new OgreBulletCollisions::CylinderCollisionShape(enemySize, Ogre::Vector3::UNIT_Y);
-		OgreBulletDynamics::RigidBody *body = new OgreBulletDynamics::RigidBody("EnemyBody" + Ogre::StringConverter::toString(total_spawned), mWorld, ColliderType::ENEMY, ColliderType::ENEMY|ColliderType::HERO);
+		OgreBulletDynamics::RigidBody *body = new OgreBulletDynamics::RigidBody("EnemyBody" + Ogre::StringConverter::toString(total_spawned), mWorld, ColliderType::ENEMY, ColliderType::ENEMY | ColliderType::HERO | ColliderType::OBSTACLE);
 		body->setShape(enemyNode, cylinder, restitution, friction, mass, position);
 		body->getBulletRigidBody()->setAngularFactor(btVector3(0, 0, 0));
 

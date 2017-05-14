@@ -31,7 +31,8 @@ namespace ViRus
 		NOTHING = 0,
 		HERO = 1,
 		ENEMY = 2,
-		POWERUP = 4
+		POWERUP = 4,
+		OBSTACLE = 8
 	};
 
 	//Prototypes

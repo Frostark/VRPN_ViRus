@@ -165,7 +165,7 @@ namespace ViRus
 			void deltaTime(double itime)
 			{
 				ttl -= itime;
-				if (itime < 0)
+				if (ttl <= 0)
 					isFinished = true;
 			}
 

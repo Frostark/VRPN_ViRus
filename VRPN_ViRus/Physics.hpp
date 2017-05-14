@@ -135,7 +135,7 @@ namespace ViRus
 
 			virtual void delta_time(double itime) = 0;
 
-			bool isFinished()
+			bool finished()
 			{
 				return isUsed;
 			}

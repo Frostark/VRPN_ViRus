@@ -26,6 +26,14 @@ namespace ViRus
 		END
 	};
 
+	enum ColliderType : short int
+	{
+		NOTHING = 0,
+		HERO = 1,
+		ENEMY = 2,
+		POWERUP = 4
+	};
+
 	//Prototypes
 	void destroy_node(Ogre::SceneNode *node);
 

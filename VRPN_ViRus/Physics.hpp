@@ -40,6 +40,8 @@ namespace ViRus
 
 	//Class declarations
 	class Hittable;//Object that can be hit
+	class HitPickup;//Hittable of a pickup
+	class HitMedkit;//Hittable of a pickup
 	class HitObstacle;//Hittable of a static obstacle
 	class Teamable;//Object that has a team
 	class HitProjectile;//Projectile that can hit objects
@@ -108,6 +110,58 @@ namespace ViRus
 
 			//Destructor
 			~HitObstacle() {}
+	};
+
+	//Hittable of a pickup
+	class HitPickup : public Hittable
+	{
+		protected:
+
+			bool isUsed;
+
+		protected:
+
+			//Complete constructor
+			HitPickup(OgreBulletDynamics::RigidBody *ibody, OgreBulletCollisions::CollisionShape *ishape, Ogre::SceneNode *iscene)
+			:Hittable(ibody,ishape,iscene),isUsed(false)
+			{}
+
+			//Destructor
+			virtual ~HitPickup() {};
+
+		public:
+
+			virtual void effect(HitPlayer *player) = 0;
+
+			virtual void delta_time(double itime) = 0;
+
+			bool isFinished()
+			{
+				return isUsed;
+			}
+
+			//Hit another hittable
+			void hit(Hittable &h);
+	};
+
+	//Hittable of a pickup
+	class HitMedkit: public HitPickup
+	{
+		public:
+
+			//Complete constructor
+			HitMedkit(OgreBulletDynamics::RigidBody *ibody, OgreBulletCollisions::CollisionShape *ishape, Ogre::SceneNode *iscene)
+				:HitPickup(ibody, ishape, iscene)
+			{}
+
+			//Destructor
+			virtual ~HitMedkit() {};
+
+		public:
+
+			void effect(HitPlayer *player);
+			void delta_time(double itime);
+
 	};
 
 	//Object that has a team

@@ -76,6 +76,7 @@ namespace ViRus
 
 			static Ogre::SceneManager *ptr_scn_mgr;//Scene manager
 			static int total_spawned;//Total spawned enemies
+			static int pickups_spawned;//Total pickups spawned
 			static HitMap *hitmap;//Hittable container
 			static OgreBulletDynamics::DynamicsWorld *mWorld; // OgreBullet World
 			static std::default_random_engine re;
@@ -104,12 +105,18 @@ namespace ViRus
 
 			double currentWaitTime, maxWaitTime;
 
+			double probMedkit;
+			std::string medkit_mesh_name;
+
+
+			std::list<HitPickup *> pickups;
+			void(*ptr_pickup_callback) (Hittable *) = nullptr;
 
 		public:
 
 			//Complete constructor
-			Spawner(Ogre::Vector3 ispawn_center, float ispawn_radius, int imax_enemies, ViRus::TeamType iteam, int ihealth, int idmg, double itimeAttack, double ivel, std::string imesh_name, double iscale, double irestitution, double ifriction, double imass, double imaxWaitTime)
-			:spawn_center(ispawn_center), spawn_radius(ispawn_radius), n_enemies(0), max_enemies(imax_enemies), team(iteam), health(ihealth), dmg(idmg), timeAttack(itimeAttack), vel(ivel), mesh_name(imesh_name), scale(iscale),restitution(irestitution),friction(ifriction),mass(imass),enemies(),ptr_callback(nullptr),currentWaitTime(0),maxWaitTime(imaxWaitTime)
+			Spawner(Ogre::Vector3 ispawn_center, float ispawn_radius, int imax_enemies, ViRus::TeamType iteam, int ihealth, int idmg, double itimeAttack, double ivel, std::string imesh_name, double iscale, double irestitution, double ifriction, double imass, double imaxWaitTime, double iprobMedkit, std::string imedkit_mesh_name)
+			:spawn_center(ispawn_center), spawn_radius(ispawn_radius), n_enemies(0), max_enemies(imax_enemies), team(iteam), health(ihealth), dmg(idmg), timeAttack(itimeAttack), vel(ivel), mesh_name(imesh_name), scale(iscale),restitution(irestitution),friction(ifriction),mass(imass),enemies(),ptr_callback(nullptr),currentWaitTime(0),maxWaitTime(imaxWaitTime),probMedkit(iprobMedkit),medkit_mesh_name(imedkit_mesh_name),pickups()
 			{}
 
 		public:
@@ -117,6 +124,11 @@ namespace ViRus
 			void set_callback(void(*icallback) (Hittable *))
 			{
 				ptr_callback = icallback;
+			}
+
+			void set_pickup_callback(void(*iptr_pickup_callback) (Hittable *))
+			{
+				ptr_pickup_callback = iptr_pickup_callback;
 			}
 
 			bool need_spawn()
@@ -129,7 +141,16 @@ namespace ViRus
 				hitmap->delete_hittable(*h);
 				n_enemies--;
 
+				Ogre::Vector3 pos;
+				if ((static_cast<HitCharAttack *>(h))->get_position(pos))
+					spawn_medkit(pos);
+
 				enemies.remove(static_cast<HitCharAttack *>(h));
+			}
+
+			void medkit_callback(Hittable *h)
+			{
+				pickups.remove(static_cast<HitPickup *>(h));
 			}
 
 			void spawn();
@@ -139,6 +160,8 @@ namespace ViRus
 			void chase(HitCharacter &h);
 
 			void deltaTime(double itime);
+
+			void spawn_medkit(Ogre::Vector3 pos);
 	};
 }
 

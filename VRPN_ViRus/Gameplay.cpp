@@ -10,6 +10,7 @@ namespace ViRus
 
 	Ogre::SceneManager *Spawner::ptr_scn_mgr=nullptr;//Scene manager
 	int Spawner::total_spawned=0;//Total spawned enemies
+	int Spawner::pickups_spawned = 0;//Total pickups spawned
 	HitMap *Spawner::hitmap = nullptr;//Hittable container
 	OgreBulletDynamics::DynamicsWorld *Spawner::mWorld=nullptr; // OgreBullet World
 	std::default_random_engine Spawner::re;//Random engine
@@ -162,5 +163,40 @@ namespace ViRus
 
 		for (HitCharAttack * ptr : enemies)
 			ptr->deltaTime(itime);
+
+		for (HitPickup *ptr : pickups)
+			ptr->delta_time(itime);
+	}
+	void Spawner::spawn_medkit(Ogre::Vector3 pos)
+	{
+		std::uniform_real_distribution<> prob;
+		if (prob(re) < probMedkit)
+		{
+			Ogre::Entity *entity = ptr_scn_mgr->createEntity(medkit_mesh_name);
+			entity->setCastShadows(true);
+			Ogre::SceneNode *node = ptr_scn_mgr->getRootSceneNode()->createChildSceneNode();
+			node->attachObject(entity);
+
+			constexpr float scale = 0.1;
+
+			node->scale(scale, scale, scale);
+			Ogre::Vector3 size = entity->getBoundingBox().getSize();
+			size *= 0.5*scale;
+
+			Ogre::Vector3 position = pos + size;
+
+			OgreBulletCollisions::BoxCollisionShape *box = new OgreBulletCollisions::BoxCollisionShape(size);
+			OgreBulletDynamics::RigidBody *body = new OgreBulletDynamics::RigidBody("medkit"+ Ogre::StringConverter::toString(pickups_spawned), mWorld, ColliderType::POWERUP, ColliderType::HERO|ColliderType::OBSTACLE);
+			body->setShape(node, box, restitution, friction, mass, position);
+			body->getBulletRigidBody()->setAngularFactor(btVector3(0, 0, 0));
+
+			HitMedkit *hittable = new HitMedkit(body, box, node);
+
+			hittable->set_callback(ptr_pickup_callback);
+			pickups.push_back(hittable);
+
+			hitmap->add_hittable(*body->getBulletObject(), *hittable);
+			pickups_spawned++;
+		}
 	}
 }

@@ -360,4 +360,20 @@ namespace ViRus
 			destroy_node(pChildNode);
 		}
 	}
+	void HitPickup::hit(Hittable & h)
+	{
+		HitPlayer *player = dynamic_cast<HitPlayer *>(&h);
+
+		if (player)
+			effect(player);
+	}
+	void HitMedkit::effect(HitPlayer * player)
+	{
+		player->revive();
+	}
+	void HitMedkit::delta_time(double itime)
+	{
+		if (scene)
+			scene->yaw(Ogre::Radian(itime));
+	}
 }

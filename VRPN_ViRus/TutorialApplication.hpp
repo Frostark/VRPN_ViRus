@@ -84,6 +84,7 @@ private:
 	static void spawner_callback(ViRus::Hittable * h);
 	static void left_gun_callback(ViRus::Hittable *h);
 	static void right_gun_callback(ViRus::Hittable *h);
+	static void pickup_callback(ViRus::Hittable *h);
 };
 #endif // #ifndef __TutorialApplication_h_
 

@@ -197,6 +197,15 @@ namespace ViRus
 			bool get_position(Ogre::Vector3 &pos) const;
 	};
 
+
+	enum class CharacterAnimState : int
+	{
+		WALK=0,
+		ATTACK,
+		DEATH,
+		END
+	};
+
 	//Character that hits others upon contact
 	class HitCharAttack : public HitCharacter
 	{
@@ -210,13 +219,19 @@ namespace ViRus
 			int dmg;//Damage that the enemy performs at contact
 			double deltaAttack = 0.0, timeAttack;//Time elapsed between attacks, actual and max
 			double vel;//Velocity of the character
+			CharacterAnimState anim;
+			Ogre::AnimationState *anim_controller;
 
 		public:
 
 			//Complete constructor
 			HitCharAttack(OgreBulletDynamics::RigidBody *ibody, OgreBulletCollisions::CollisionShape *ishape, Ogre::SceneNode *iscene, TeamType iteam, int ihealth, int idmg, double itimeAttack = DEF_ATTACK_TIME, double ivel = DEF_VEL)
-			:HitCharacter(ibody, ishape, iscene, iteam, ihealth), dmg(idmg), timeAttack(itimeAttack), vel(ivel)
-			{}
+			:HitCharacter(ibody, ishape, iscene, iteam, ihealth), dmg(idmg), timeAttack(itimeAttack), vel(ivel), anim(CharacterAnimState::WALK),anim_controller(nullptr)
+			{
+				anim_controller = get_entity()->getAnimationState("Walk");
+				anim_controller->setLoop(true);
+				anim_controller->setEnabled(true);
+			}
 
 			//Virtual destructor
 			virtual ~HitCharAttack() {}
@@ -236,6 +251,9 @@ namespace ViRus
 
 			//Chase a character
 			void chase(const HitCharacter &h);
+
+			//Get the entity
+			Ogre::Entity *get_entity();
 
 	};
 

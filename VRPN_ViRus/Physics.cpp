@@ -201,6 +201,8 @@ namespace ViRus
 
 	void HitCharAttack::deltaTime(double itime)
 	{
+		anim_controller->addTime(itime);
+
 		deltaAttack -= itime;
 		deltaAttack = std::max(0.0, deltaAttack);
 	}
@@ -226,6 +228,12 @@ namespace ViRus
 		Ogre::Vector3 pos;
 		if (h.get_position(pos))
 			go_point(pos);
+	}
+
+	Ogre::Entity * HitCharAttack::get_entity()
+	{
+		Ogre::SceneNode *entityNode = (Ogre::SceneNode *)scene->getChildIterator().getNext();
+		return (Ogre::Entity *)entityNode->getAttachedObjectIterator().getNext();
 	}
 	bool HitCharacter::get_position(Ogre::Vector3 & pos) const
 	{

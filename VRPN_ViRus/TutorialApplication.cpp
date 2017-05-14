@@ -146,13 +146,13 @@ void TutorialApplication::createScene(void)
 	constexpr int MAX_ENEMIES = 5;
 	constexpr int ENE_HEALTH = 50;
 	constexpr int ENE_DMG = 10;
-	constexpr float ENE_TIME_ATTACK = 2.0;
+	constexpr float ENE_TIME_ATTACK = 1.0;
 	constexpr float ENE_VEL = 4;
 	constexpr float ENE_SCALE = 1.8 / 200.0;
 	constexpr float ENE_RESTITUTION = 0.1;
 	constexpr float ENE_FRICTION = 5.0;
 	constexpr float ENE_MASS = 10.0;
-	constexpr float ENE_MAX_WAIT_TIME = 0.5;
+	constexpr float ENE_MAX_WAIT_TIME = 1.25;
 	spawner = new ViRus::Spawner(Ogre::Vector3::ZERO, 10, MAX_ENEMIES, ViRus::TeamType::ENEMY, ENE_HEALTH, ENE_DMG, ENE_TIME_ATTACK, ENE_VEL, "ninja.mesh", ENE_SCALE, ENE_RESTITUTION, ENE_FRICTION, ENE_MASS, ENE_MAX_WAIT_TIME);
 	spawner->set_callback(spawner_callback);
 

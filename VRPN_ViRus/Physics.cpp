@@ -370,6 +370,7 @@ namespace ViRus
 	void HitMedkit::effect(HitPlayer * player)
 	{
 		player->revive();
+		isUsed = true;
 	}
 	void HitMedkit::delta_time(double itime)
 	{

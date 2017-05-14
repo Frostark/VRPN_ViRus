@@ -203,6 +203,7 @@ namespace ViRus
 						{
 							anim = CharacterAnimState::ATTACK;
 							anim_controller = ent->getAnimationState("Attack2");
+							anim_controller->setTimePosition(0);
 							anim_controller->setLoop(false);
 							anim_controller->setEnabled(true);
 						}
@@ -230,6 +231,7 @@ namespace ViRus
 					{
 						anim = CharacterAnimState::DEATH;
 						anim_controller = ent->getAnimationState("Death1");
+						anim_controller->setTimePosition(0);
 						anim_controller->setLoop(false);
 						anim_controller->setEnabled(true);
 						return false;
@@ -252,6 +254,7 @@ namespace ViRus
 				case ViRus::CharacterAnimState::START:
 					anim = CharacterAnimState::WALK;
 					anim_controller = ent->getAnimationState("Walk");
+					anim_controller->setTimePosition(0);
 					anim_controller->setLoop(true);
 					anim_controller->setEnabled(true);
 					break;
@@ -262,6 +265,7 @@ namespace ViRus
 					{
 						anim = CharacterAnimState::WALK;
 						anim_controller = ent->getAnimationState("Walk");
+						anim_controller->setTimePosition(0);
 						anim_controller->setLoop(true);
 						anim_controller->setEnabled(true);
 					}

@@ -107,6 +107,7 @@ namespace ViRus
 		HitCharAttack *ptr = new HitCharAttack(body, cylinder, enemyNode, team, health, dmg, timeAttack, vel);
 
 		ptr->set_callback(ptr_callback);
+		ptr->set_entity(enemy);
 		enemies.push_back(ptr);
 
 		hitmap->add_hittable(*body->getBulletObject(), *ptr);

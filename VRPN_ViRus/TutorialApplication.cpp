@@ -175,55 +175,6 @@ void TutorialApplication::createScene(void)
 	spawner = new ViRus::Spawner(Ogre::Vector3::ZERO, 10, MAX_ENEMIES, ViRus::TeamType::ENEMY, ENE_HEALTH, ENE_DMG, ENE_TIME_ATTACK, ENE_VEL, "ninja.mesh", ENE_SCALE, ENE_RESTITUTION, ENE_FRICTION, ENE_MASS);
 	spawner->set_callback(spawner_callback);
 
-
-	static constexpr double PENGUIN_SCALING = 0.04;
-
-	// Define the penguin mesh
-	Ogre::Entity* penguin = mSceneMgr->createEntity("Penguin", "penguin.mesh");
-	penguin->setCastShadows(true);
-	Ogre::SceneNode *penguinNode = mSceneMgr->getRootSceneNode()->createChildSceneNode("PenguinNode");
-	Ogre::SceneNode *penguinEntityNode = penguinNode->createChildSceneNode("PenguinEntity");
-	penguinEntityNode->attachObject(penguin);
-	penguinEntityNode->yaw(Ogre::Degree(180));
-
-	// We need the bounding box of the entity to be able to set the size of the Bullet shape
-	Ogre::AxisAlignedBox penguinBoundingBox = penguin->getBoundingBox();
-
-	// Size of the Bullet shape, a box
-	Ogre::Vector3 penguinShapeSize = Ogre::Vector3::ZERO;
-	penguinShapeSize = penguinBoundingBox.getSize();
-	penguinShapeSize /= 2.0f; // Only the half needed
-	penguinShapeSize *= 0.96f; // Bullet margin is a bit bigger so we need a smaller size
-
-	penguinNode->scale(PENGUIN_SCALING, PENGUIN_SCALING, PENGUIN_SCALING); // The penguin is too big for us
-	penguinShapeSize *= PENGUIN_SCALING; // don't forget to scale down the Bullet shape too
-
-	penguinNode->yaw(Ogre::Degree(180));
-
-	penguinNode->translate(0.0, 24 * PENGUIN_SCALING, 0.0);
-
-	// After that create the Bullet shape with the calculated size
-	OgreBulletCollisions::BoxCollisionShape *penguinShape;
-	penguinShape = new OgreBulletCollisions::BoxCollisionShape(penguinShapeSize);
-
-
-	// and the Bullet rigid body
-	OgreBulletDynamics::RigidBody *penguinBody = new OgreBulletDynamics::RigidBody("penguinBody", mWorld);
-	Ogre::Vector3 penguinPosition = penguinNode->getPosition();
-	Ogre::Quaternion penguinOrientation = penguinNode->getOrientation();
-	penguinBody->setShape(penguinNode, penguinShape, 0.1f, 5.0f, 10.0f, // (node, shape, restitution, friction, mass
-		penguinPosition, penguinOrientation); // starting position, orientation)
-
-	penguinBody->getBulletRigidBody()->setAngularFactor(btVector3(0, 0, 0));
-	penguinNode->translate(Ogre::Vector3(0, 0, -5));
-
-	// Push the created objects to the deques
-
-	ptr_target = new ViRus::HitCharAttack(penguinBody, penguinShape, penguinNode, ViRus::TeamType::ENEMY, 40, 20);
-	ptr_target->set_callback(target_callback);
-
-	hitmap.add_hittable(*penguinBody->getBulletObject(), *ptr_target);
-
 	//Character physics
 
 	//Add the collider to the head
@@ -304,15 +255,19 @@ bool TutorialApplication::processUnbufferedInput(const Ogre::FrameEvent& evt)
 		hitmap.handle_collision(obA, obB);
 	}
 
-	while (spawner->need_spawn())
-		spawner->spawn();
+	if (spawner)
+		while (spawner->need_spawn())
+			spawner->spawn();
 
 	hitmap.clean_queued();
 
-	if (ptr_hero&&ptr_target)
-		ptr_target->chase(*ptr_hero);
-	if (ptr_hero&&spawner)
-		spawner->chase(*ptr_hero);
+	if (spawner)
+	{
+		if (ptr_hero)
+			spawner->chase(*ptr_hero);
+
+		spawner->deltaTime(evt.timeSinceLastFrame);
+	}
 
 	if (shotLeft)
 	{
@@ -375,14 +330,14 @@ void VRPN_CALLBACK TutorialApplication::handleHMDTracker(void* userData, const v
 }
 void TutorialApplication::target_callback(ViRus::Hittable *h)
 {
-	if (h == ptr_target)
-		ptr_target = nullptr;
-	else if (h == ptr_hero)
+	if (h == ptr_hero)
 		ptr_hero = nullptr;
 }
 bool TutorialApplication::at_death_callback(ViRus::HitPlayer *player)
 {
 	player->revive();
+	if (spawner)
+		spawner->kill_all();
 
 	return false;
 }

@@ -129,6 +129,8 @@ namespace ViRus
 			void kill_all();
 
 			void chase(HitCharacter &h);
+
+			void deltaTime(double itime);
 	};
 }
 

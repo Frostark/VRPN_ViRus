@@ -39,6 +39,7 @@ namespace ViRus
 
 			bulletNode->scale(Ogre::Vector3(scale, scale, scale));
 			bulletEntNode->translate(Ogre::Vector3(0, -bulletShapeSize.y, 2*bulletShapeSize.z),Ogre::Node::TS_WORLD);
+			bulletNode->setOrientation(barrel->_getDerivedOrientation());
 			bulletNode->pitch(Ogre::Degree(-90));
 
 			Ogre::Quaternion rot = bulletNode->getOrientation();

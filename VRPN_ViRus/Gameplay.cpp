@@ -175,15 +175,18 @@ namespace ViRus
 			Ogre::Entity *entity = ptr_scn_mgr->createEntity(medkit_mesh_name);
 			entity->setCastShadows(true);
 			Ogre::SceneNode *node = ptr_scn_mgr->getRootSceneNode()->createChildSceneNode();
-			node->attachObject(entity);
+			Ogre::SceneNode *entNode = node->createChildSceneNode();
+			entNode->attachObject(entity);
 
-			constexpr float scale = 0.1;
+			constexpr float scale = 1;
 
 			node->scale(scale, scale, scale);
 			Ogre::Vector3 size = entity->getBoundingBox().getSize();
 			size *= 0.5*scale;
 
-			Ogre::Vector3 position = pos + size;
+			entNode->translate(Ogre::Vector3(-size.x,-size.y,size.z), Ogre::Node::TS_WORLD);
+
+			Ogre::Vector3 position = pos;
 
 			OgreBulletCollisions::BoxCollisionShape *box = new OgreBulletCollisions::BoxCollisionShape(size);
 			OgreBulletDynamics::RigidBody *body = new OgreBulletDynamics::RigidBody("medkit"+ Ogre::StringConverter::toString(pickups_spawned), mWorld, ColliderType::POWERUP, ColliderType::HERO|ColliderType::OBSTACLE);

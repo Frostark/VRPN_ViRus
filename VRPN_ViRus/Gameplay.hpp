@@ -96,12 +96,14 @@ namespace ViRus
 			std::list<HitCharAttack *> enemies;//List of all spawned alive enemies
 			void(*ptr_callback) (Hittable *) = nullptr;
 
+			double currentWaitTime, maxWaitTime;
+
 
 		public:
 
 			//Complete constructor
-			Spawner(Ogre::Vector3 ispawn_center, float ispawn_radius, int imax_enemies, ViRus::TeamType iteam, int ihealth, int idmg, double itimeAttack, double ivel, std::string imesh_name, double iscale, double irestitution, double ifriction, double imass)
-			:spawn_center(ispawn_center), spawn_radius(ispawn_radius), n_enemies(0), max_enemies(imax_enemies), team(iteam), health(ihealth), dmg(idmg), timeAttack(itimeAttack), vel(ivel), mesh_name(imesh_name), scale(iscale),restitution(irestitution),friction(ifriction),mass(imass),enemies()
+			Spawner(Ogre::Vector3 ispawn_center, float ispawn_radius, int imax_enemies, ViRus::TeamType iteam, int ihealth, int idmg, double itimeAttack, double ivel, std::string imesh_name, double iscale, double irestitution, double ifriction, double imass, double imaxWaitTime)
+			:spawn_center(ispawn_center), spawn_radius(ispawn_radius), n_enemies(0), max_enemies(imax_enemies), team(iteam), health(ihealth), dmg(idmg), timeAttack(itimeAttack), vel(ivel), mesh_name(imesh_name), scale(iscale),restitution(irestitution),friction(ifriction),mass(imass),enemies(),ptr_callback(nullptr),currentWaitTime(0),maxWaitTime(imaxWaitTime)
 			{}
 
 		public:
@@ -113,7 +115,7 @@ namespace ViRus
 
 			bool need_spawn()
 			{
-				return n_enemies < max_enemies;
+				return (!currentWaitTime) && (n_enemies < max_enemies);
 			}
 
 			void callback(Hittable *h)

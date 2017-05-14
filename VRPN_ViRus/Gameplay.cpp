@@ -75,6 +75,8 @@ namespace ViRus
 
 	void Spawner::spawn()
 	{
+		currentWaitTime = maxWaitTime;
+
 		std::uniform_real_distribution<> random_angle(0, Ogre::Degree(360).valueRadians());
 		double angle = random_angle(re);
 
@@ -129,6 +131,10 @@ namespace ViRus
 
 	void Spawner::deltaTime(double itime)
 	{
+		currentWaitTime -= itime;
+		if (currentWaitTime < 0)
+			currentWaitTime = 0;
+
 		for (HitCharAttack * ptr : enemies)
 			ptr->deltaTime(itime);
 	}

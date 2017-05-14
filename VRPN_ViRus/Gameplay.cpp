@@ -124,7 +124,7 @@ namespace ViRus
 
 
 		OgreBulletCollisions::CylinderCollisionShape *cylinder = new OgreBulletCollisions::CylinderCollisionShape(enemySize, Ogre::Vector3::UNIT_Y);
-		OgreBulletDynamics::RigidBody *body = new OgreBulletDynamics::RigidBody("EnemyBody" + Ogre::StringConverter::toString(total_spawned), mWorld, ColliderType::HERO, ColliderType::ENEMY);
+		OgreBulletDynamics::RigidBody *body = new OgreBulletDynamics::RigidBody("EnemyBody" + Ogre::StringConverter::toString(total_spawned), mWorld, ColliderType::ENEMY, ColliderType::ENEMY|ColliderType::HERO);
 		body->setShape(enemyNode, cylinder, restitution, friction, mass, position);
 		body->getBulletRigidBody()->setAngularFactor(btVector3(0, 0, 0));
 

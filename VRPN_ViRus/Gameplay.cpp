@@ -25,7 +25,8 @@ namespace ViRus
 			Ogre::Entity *bullet = ptr_scn_mgr->createEntity("Bullet" + Ogre::StringConverter::toString(numBullets), mesh_name);
 			bullet->setCastShadows(true);
 			Ogre::SceneNode *bulletNode = ptr_scn_mgr->getRootSceneNode()->createChildSceneNode();
-			bulletNode->attachObject(bullet);
+			Ogre::SceneNode *bulletEntNode = bulletNode->createChildSceneNode();
+			bulletEntNode->attachObject(bullet);
 
 			// We need the bounding box of the entity to be able to set the size of the Bullet shape
 			Ogre::AxisAlignedBox bulletBoundingBox = bullet->getBoundingBox();
@@ -37,6 +38,11 @@ namespace ViRus
 			bulletShapeSize *= scale; // Bullet margin is a bit bigger so we need a smaller size
 
 			bulletNode->scale(Ogre::Vector3(scale, scale, scale));
+			bulletEntNode->translate(Ogre::Vector3(0, -bulletShapeSize.y, 2*bulletShapeSize.z),Ogre::Node::TS_WORLD);
+			bulletNode->pitch(Ogre::Degree(-90));
+
+			Ogre::Quaternion rot = bulletNode->getOrientation();
+			//Ogre::Vector3 pos = from+Ogre::Vector3(0,bulletShapeSize.y,0);
 
 			// After that create the Bullet shape with the calculated size
 			OgreBulletCollisions::BoxCollisionShape *bulletShape = new OgreBulletCollisions::BoxCollisionShape(bulletShapeSize);
@@ -48,7 +54,7 @@ namespace ViRus
 				0.6f, // dynamic body friction
 				mass, // dynamic bodymass
 				from, // starting position of the shape
-				Ogre::Quaternion(0, 0, 0, 1)
+				rot
 			); // orientation of the shape
 			bulletBody->setLinearVelocity(dir.normalisedCopy() * speed); // shooting speed
 

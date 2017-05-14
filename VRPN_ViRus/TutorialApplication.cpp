@@ -78,14 +78,14 @@ void TutorialApplication::createScene(void)
 	node->attachObject(static_cast <Ogre::SimpleRenderable *> (debugDrawer));
 
 	//Create the camera that will be controlled by the HMD
-	/*Ogre::Camera* newCamera = mSceneMgr->createCamera("NewCam");
+	Ogre::Camera* newCamera = mSceneMgr->createCamera("NewCam");
 	mWindow->getViewport(0)->setCamera(newCamera);
 	newCamera->setPosition(Ogre::Vector3(0, 0, 0));
 	newCamera->lookAt(Ogre::Vector3(Ogre::Vector3::NEGATIVE_UNIT_Z));
-	newCamera->setNearClipDistance(0.1);*/
+	newCamera->setNearClipDistance(0.1);
 
-	mCamera->setPosition(Ogre::Vector3::ZERO + player_pos);
-	mCameraMan->setTopSpeed(3);
+	//mCamera->setPosition(Ogre::Vector3::ZERO + player_pos);
+	//mCameraMan->setTopSpeed(3);
 
 	//tracker = new vrpn_Tracker_Remote("iotracker@161.67.196.59:3883");
 	//tracker->register_change_handler(this, handleHMDTracker);
@@ -119,26 +119,27 @@ void TutorialApplication::createScene(void)
 
 	//Attach an eye node to the HMD node, and translate the offset from the tracer's position to the eye position
 	Ogre::SceneNode *eyeNode = HMDNode->createChildSceneNode();
-	eyeNode->translate(0.0, -0.1, 0.05);
-	//eyeNode->attachObject(newCamera);//Attach the camera to the eyeNode
+	eyeNode->translate(Ogre::Vector3(0.0, -0.1, 0.05)+ player_pos / 2,Ogre::Node::TS_WORLD);
+	eyeNode->attachObject(newCamera);//Attach the camera to the eyeNode
 
 	//Create the left hand node, and attach the entity to it
-	leftHandNode = mSceneMgr->getRootSceneNode()->createChildSceneNode("leftHandNode");
+	leftHandNode = HMDNode->createChildSceneNode("leftHandNode");
 	leftHandNode->attachObject(leftHandEntity);
 	leftHandNode->scale(Ogre::Vector3(1, 1, 1));
 	//leftHandNode->pitch(Ogre::Degree(-90.0f));
 	//leftHandNode->roll(Ogre::Degree(180.0f));
 
-	leftHandNode->setPosition(Ogre::Vector3(-0.2, -0.2, -0.4)+player_pos);
+	//leftHandNode->setPosition(Ogre::Vector3(-0.2, -0.2, -0.4)+player_pos);
+	leftHandNode->translate(Ogre::Vector3(-0.2, -0.4, -0.4)+player_pos/2, Ogre::Node::TS_WORLD);
 
 	//Create the right hand node, and attach
-	rightHandNode = mSceneMgr->getRootSceneNode()->createChildSceneNode("rightHandNode");
+	rightHandNode = HMDNode->createChildSceneNode("rightHandNode");
 	rightHandNode->attachObject(rightHandEntity);
 	rightHandNode->scale(Ogre::Vector3(1, 1, 1));
 	//rightHandNode->pitch(Ogre::Degree(-90.0f));
 	//rightHandNode->roll(Ogre::Degree(180.0f));
 
-	rightHandNode->setPosition(Ogre::Vector3(+0.2, -0.2, -0.4)+player_pos);
+	rightHandNode->translate(Ogre::Vector3(+0.2, -0.4, -0.4)+player_pos/2, Ogre::Node::TS_WORLD);
 
 
 	// Create a Light and set its position
@@ -280,6 +281,43 @@ bool TutorialApplication::processUnbufferedInput(const Ogre::FrameEvent& evt)
 	{
 		right_gun->fire();
 		shotRight= false;
+	}
+
+	if (ptr_hero)
+	{
+		static Ogre::Real mMove = 2; // The movement constant
+		Ogre::Vector3 transVector = Ogre::Vector3::ZERO;
+
+		if (mKeyboard->isKeyDown(OIS::KC_I)) // Backward
+		{
+			transVector.z -= mMove;
+		}
+		if (mKeyboard->isKeyDown(OIS::KC_K)) // Forward
+		{
+			transVector.z += mMove;
+		}
+		if (mKeyboard->isKeyDown(OIS::KC_J)) // Left
+		{
+			transVector.x -= mMove;
+		}
+		if (mKeyboard->isKeyDown(OIS::KC_L)) // Right
+		{
+			transVector.x += mMove;
+		}
+		if (mKeyboard->isKeyDown(OIS::KC_U))
+		{
+			HMDNode->yaw(Ogre::Degree(2));
+		}
+		if (mKeyboard->isKeyDown(OIS::KC_O))
+		{
+			HMDNode->yaw(Ogre::Degree(-2));
+		}
+		if (mKeyboard->isKeyDown(OIS::KC_SPACE))
+		{
+			shotLeft = shotRight = true;
+		}
+
+		HMDNode->translate(HMDNode->getOrientation() * transVector * evt.timeSinceLastFrame);
 	}
 
 	left_gun->refresh(evt.timeSinceLastFrame);

@@ -18,8 +18,8 @@ namespace ViRus
 	{
 		if (!delta_time)
 		{
-			Ogre::Vector3 from = barrel->getPosition();
-			Ogre::Vector3 dir = barrel->getOrientation() * Ogre::Vector3(0, 0, -1);
+			Ogre::Vector3 from = barrel->_getDerivedPosition();
+			Ogre::Vector3 dir = barrel->_getDerivedOrientation() * Ogre::Vector3(0, 0, -1);
 			
 			// Create an ordinary, Ogre mesh with texture
 			Ogre::Entity *bullet = ptr_scn_mgr->createEntity("Bullet" + Ogre::StringConverter::toString(numBullets), mesh_name);

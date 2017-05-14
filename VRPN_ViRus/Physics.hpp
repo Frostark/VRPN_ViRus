@@ -242,6 +242,9 @@ namespace ViRus
 
 		public:
 
+			//Return true if this hittable is done and can be removed from the map, play death animation before dying
+			virtual bool finished();
+
 			//Update the time between attacks with the given elapsed time
 			void deltaTime(double itime);
 

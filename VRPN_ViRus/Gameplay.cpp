@@ -49,7 +49,7 @@ namespace ViRus
 			OgreBulletCollisions::BoxCollisionShape *bulletShape = new OgreBulletCollisions::BoxCollisionShape(bulletShapeSize);
 
 			// and the Bullet rigid body
-			OgreBulletDynamics::RigidBody *bulletBody = new OgreBulletDynamics::RigidBody("defaultBoxRigid" + Ogre::StringConverter::toString(numBullets), mWorld, ColliderType::ENEMY, ColliderType::ENEMY|ColliderType::HERO);
+			OgreBulletDynamics::RigidBody *bulletBody = new OgreBulletDynamics::RigidBody("defaultBoxRigid" + Ogre::StringConverter::toString(numBullets), mWorld, ColliderType::HERO, ColliderType::ENEMY|ColliderType::OBSTACLE);
 			bulletBody->setShape(bulletNode, bulletShape,
 				0.6f, // dynamic body restitution
 				0.6f, // dynamic body friction

@@ -118,8 +118,6 @@ namespace ViRus
 		{
 			hitmap->delete_hittable(*ptr);
 		}
-		n_enemies = 0;
-		enemies.clear();
 	}
 	void Spawner::chase(HitCharacter &h)
 	{

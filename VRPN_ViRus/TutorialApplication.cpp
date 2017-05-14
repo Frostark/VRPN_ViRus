@@ -132,11 +132,11 @@ void TutorialApplication::createScene(void)
 	ViRus::Gun::ptr_scn_mgr = mSceneMgr;
 
 	//Left gun
-	left_gun = new ViRus::Gun(leftHandNode, "Barrel.mesh");
+	left_gun = new ViRus::Gun(leftHandNode, "bullet.mesh",5);
 	left_gun->set_callback(left_gun_callback);
 
 	//Right gun
-	right_gun = new ViRus::Gun(rightHandNode, "Barrel.mesh");
+	right_gun = new ViRus::Gun(rightHandNode, "bullet.mesh",5);
 	right_gun->set_callback(right_gun_callback);
 
 	//Spawner

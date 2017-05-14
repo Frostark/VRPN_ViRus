@@ -162,7 +162,7 @@ void TutorialApplication::createScene(void)
 	//Character physics
 
 	//Add the collider to the head
-	Ogre::Vector3 HMD_cylinder_size(0.25, 2, 0.25);
+	Ogre::Vector3 HMD_cylinder_size(1, 2, 1);
 	HMD_cylinder_size /= 2.0;
 	OgreBulletCollisions::CylinderCollisionShape *HMDCylinder = new OgreBulletCollisions::CylinderCollisionShape(HMD_cylinder_size, Ogre::Vector3::UNIT_Y);
 

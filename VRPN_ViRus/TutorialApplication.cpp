@@ -29,6 +29,8 @@ TutorialApplication::~TutorialApplication(void)
 //---------------------------------------------------------------------------
 void TutorialApplication::createScene(void)
 {
+	constexpr bool USING_IOTRACKER = true;
+
 	//Set up the scene manager on the map
 	ViRus::Hittable::ptr_scn_mgr = mSceneMgr;
 
@@ -77,8 +79,22 @@ void TutorialApplication::createScene(void)
 	newCamera->lookAt(Ogre::Vector3(0, 0, -1));
 	newCamera->setNearClipDistance(0.1);
 
-	tracker = new vrpn_Tracker_Remote("iotracker@161.67.196.59:3883");
-	tracker->register_change_handler(this, handleHMDTracker);
+	if (USING_IOTRACKER)
+	{
+		tracker = new vrpn_Tracker_Remote("iotracker@161.67.196.59:3883");
+		tracker->register_change_handler(this, handle_iotracker_tracker);
+	}
+	else
+	{
+		HMD_tracker = new vrpn_Tracker_Remote("T6002@161.67.196.44:3883");
+		HMD_tracker->register_change_handler(this, handle_HMD_tracker);
+
+		leftHand_tracker = new vrpn_Tracker_Remote("T6004@161.67.196.44:3883");
+		leftHand_tracker->register_change_handler(this, handle_leftHand_tracker);
+
+		rightHand_tracker = new vrpn_Tracker_Remote("T6001@161.67.196.44:3883");
+		rightHand_tracker->register_change_handler(this, handle_rightHand_tracker);
+	}
 
 	vrpnButton1 = new vrpn_Button_Remote("joyWin32_1@localhost");
 	vrpnButton2 = new vrpn_Button_Remote("joyWin32_2@localhost");
@@ -206,7 +222,15 @@ bool TutorialApplication::frameRenderingQueued(const Ogre::FrameEvent& evt)
 	bool ret = BaseApplication::frameRenderingQueued(evt);
 
 	//Tracker loops
-	tracker->mainloop();
+
+	if (tracker)
+		tracker->mainloop();
+	else
+	{
+		HMD_tracker->mainloop();
+		leftHand_tracker->mainloop();
+		rightHand_tracker->mainloop();
+	}
 	vrpnButton1->mainloop();
 	vrpnButton2->mainloop();
 
@@ -286,7 +310,7 @@ void VRPN_CALLBACK TutorialApplication::handleButton2(void* userData, const vrpn
 		static_cast<TutorialApplication *>(userData)->shotRight = true;
 }
 
-void VRPN_CALLBACK TutorialApplication::handleHMDTracker(void* userData, const vrpn_TRACKERCB t)
+void VRPN_CALLBACK TutorialApplication::handle_iotracker_tracker(void* userData, const vrpn_TRACKERCB t)
 {
 	vrpn_TRACKERCB *pData = nullptr;
 	switch (t.sensor)
@@ -314,6 +338,18 @@ void VRPN_CALLBACK TutorialApplication::handleHMDTracker(void* userData, const v
 		pData->pos[1] /= 1000;
 		pData->pos[2] /= 1000;
 	}
+}
+void VRPN_CALLBACK TutorialApplication::handle_HMD_tracker(void * userData, const vrpn_TRACKERCB t)
+{
+	(((TutorialApplication*)userData)->HMDData) = t;
+}
+void VRPN_CALLBACK TutorialApplication::handle_leftHand_tracker(void * userData, const vrpn_TRACKERCB t)
+{
+	(((TutorialApplication*)userData)->leftHandData) = t;
+}
+void VRPN_CALLBACK TutorialApplication::handle_rightHand_tracker(void * userData, const vrpn_TRACKERCB t)
+{
+	(((TutorialApplication*)userData)->rightHandData) = t;
 }
 void TutorialApplication::target_callback(ViRus::Hittable *h)
 {

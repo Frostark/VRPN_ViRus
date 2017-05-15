@@ -59,13 +59,17 @@ private:
 	static void VRPN_CALLBACK handleButton1(void * userData, const vrpn_BUTTONCB b);
 	static void VRPN_CALLBACK handleButton2(void * userData, const vrpn_BUTTONCB b);
 	//Handlers for tracker events
-	static void VRPN_CALLBACK handleHMDTracker(void* userData, const vrpn_TRACKERCB t);
+	static void VRPN_CALLBACK handle_iotracker_tracker(void* userData, const vrpn_TRACKERCB t);
+	static void VRPN_CALLBACK handle_HMD_tracker(void* userData, const vrpn_TRACKERCB t);
+	static void VRPN_CALLBACK handle_leftHand_tracker(void* userData, const vrpn_TRACKERCB t);
+	static void VRPN_CALLBACK handle_rightHand_tracker(void* userData, const vrpn_TRACKERCB t);
 
 	//Data received from the trackers
 	vrpn_TRACKERCB rightHandData, leftHandData, HMDData;
 
 	//Tracker for left and right hands, and HMD
-	vrpn_Tracker_Remote *tracker;
+	vrpn_Tracker_Remote *tracker=nullptr;
+	vrpn_Tracker_Remote *HMD_tracker=nullptr,*leftHand_tracker=nullptr,*rightHand_tracker=nullptr;
 
 	vrpn_Button_Remote *vrpnButton1, *vrpnButton2;
 

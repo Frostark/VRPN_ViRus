@@ -185,7 +185,7 @@ class SoundManager
 
        bool init( void );
        bool getIsSoundOn( void ) { return isSoundOn; };
-       void setAudioPath( char* path ) { mAudioPath = std::string( path ); };
+       void setAudioPath( const char* path ) { mAudioPath = std::string( path ); };
       
        bool checkALError( void );
        bool checkALError( std::string pMsg );

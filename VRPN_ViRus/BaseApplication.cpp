@@ -21,6 +21,9 @@ http://www.ogre3d.org/wiki/
 #include <macUtils.h>
 #endif
 
+SoundManager *sound_mgr = nullptr;
+unsigned int audio_fire_gun = 0;
+
 //---------------------------------------------------------------------------
 BaseApplication::BaseApplication(void)
     : mRoot(0),

@@ -31,6 +31,13 @@ void TutorialApplication::createScene(void)
 {
 	constexpr bool USING_IOTRACKER = false;
 
+	//Sounds
+	sound_mgr = SoundManager::createManager();
+	sound_mgr->init();
+	sound_mgr->setAudioPath("..\\..\\media\\sounds\\");
+
+	sound_mgr->loadAudio("fire_gun.wav", &audio_fire_gun, false);
+
 	//Set up the scene manager on the map
 	ViRus::Hittable::ptr_scn_mgr = mSceneMgr;
 

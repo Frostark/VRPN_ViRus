@@ -20,8 +20,6 @@ http://www.ogre3d.org/wiki/
 
 #include "BaseApplication.hpp"
 
-#include "SoundManager.h"
-
 //---------------------------------------------------------------------------
 
 #include "vrpn_Tracker.h"

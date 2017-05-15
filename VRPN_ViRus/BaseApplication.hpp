@@ -27,6 +27,8 @@ http://www.ogre3d.org/wiki/
 #include <OgreRenderWindow.h>
 #include <OgreConfigFile.h>
 
+#include "SoundManager.h"
+
 #if OGRE_PLATFORM == OGRE_PLATFORM_APPLE
 #  include <OIS/OISEvents.h>
 #  include <OIS/OISInputManager.h>
@@ -67,6 +69,10 @@ http://www.ogre3d.org/wiki/
 #endif
 
 //---------------------------------------------------------------------------
+
+extern SoundManager *sound_mgr;
+
+extern unsigned int audio_fire_gun;
 
 class BaseApplication : public Ogre::FrameListener, public Ogre::WindowEventListener, public OIS::KeyListener, public OIS::MouseListener, OgreBites::SdkTrayListener
 {

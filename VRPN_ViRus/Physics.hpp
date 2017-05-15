@@ -385,6 +385,21 @@ namespace ViRus
 				return false;
 			}
 
+			//Take damage
+			void takeDamage(int idmg)
+			{
+				HitCharacter::takeDamage(idmg);
+
+				if (health > 0)
+				{
+					sound_mgr->playAudio(audio_player_hit, true);
+				}
+				else
+				{
+					sound_mgr->playAudio(audio_player_dead, true);
+				}
+			}
+
 			void revive()
 			{
 				health = init_health;

@@ -39,6 +39,8 @@ void TutorialApplication::createScene(void)
 	sound_mgr->loadAudio("fire_gun.wav", &audio_fire_gun, false);
 	sound_mgr->loadAudio("enemy_hit.wav", &audio_enemy_hit, false);
 	sound_mgr->loadAudio("enemy_dead.wav", &audio_enemy_dead, false);
+	sound_mgr->loadAudio("player_hit.wav", &audio_player_hit, false);
+	sound_mgr->loadAudio("player_dead.wav", &audio_player_dead, false);
 
 	//Set up the scene manager on the map
 	ViRus::Hittable::ptr_scn_mgr = mSceneMgr;

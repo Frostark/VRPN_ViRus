@@ -52,7 +52,7 @@ void TutorialApplication::createScene(void)
 	// Create a SceneNode and attach the Entity to it
 	Ogre::SceneNode* mapNode = mSceneMgr->getRootSceneNode()->createChildSceneNode("MapNode");
 
-	constexpr float MAPSCALE = 0.5;
+	constexpr float MAPSCALE = 0.4;
 
 	mapNode->scale(Ogre::Vector3(MAPSCALE, 1, MAPSCALE));
 	mapNode->translate(Ogre::Vector3(-17*MAPSCALE, 0.0, 16*MAPSCALE));
@@ -159,7 +159,7 @@ void TutorialApplication::createScene(void)
 	constexpr float ENE_FRICTION = 5.0;
 	constexpr float ENE_MASS = 10.0;
 	constexpr float ENE_MAX_WAIT_TIME = 1.25;
-	spawner = new ViRus::Spawner(Ogre::Vector3::ZERO, 10, MAX_ENEMIES, ViRus::TeamType::ENEMY, ENE_HEALTH, ENE_DMG, ENE_TIME_ATTACK, ENE_VEL, "ninja.mesh", ENE_SCALE, ENE_RESTITUTION, ENE_FRICTION, ENE_MASS, ENE_MAX_WAIT_TIME, 0.4, "medkit.mesh");
+	spawner = new ViRus::Spawner(Ogre::Vector3::ZERO, 10.0*MAPSCALE, MAX_ENEMIES, ViRus::TeamType::ENEMY, ENE_HEALTH, ENE_DMG, ENE_TIME_ATTACK, ENE_VEL, "ninja.mesh", ENE_SCALE, ENE_RESTITUTION, ENE_FRICTION, ENE_MASS, ENE_MAX_WAIT_TIME, 0.4, "medkit.mesh");
 	spawner->set_callback(spawner_callback);
 	spawner->set_pickup_callback(pickup_callback);
 

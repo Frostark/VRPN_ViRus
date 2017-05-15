@@ -29,7 +29,7 @@ TutorialApplication::~TutorialApplication(void)
 //---------------------------------------------------------------------------
 void TutorialApplication::createScene(void)
 {
-	constexpr bool USING_IOTRACKER = true;
+	constexpr bool USING_IOTRACKER = false;
 
 	//Set up the scene manager on the map
 	ViRus::Hittable::ptr_scn_mgr = mSceneMgr;
@@ -54,7 +54,7 @@ void TutorialApplication::createScene(void)
 	// Create a SceneNode and attach the Entity to it
 	Ogre::SceneNode* mapNode = mSceneMgr->getRootSceneNode()->createChildSceneNode("MapNode");
 
-	constexpr float MAPSCALE = 0.4;
+	constexpr float MAPSCALE = 0.2;
 
 	mapNode->scale(Ogre::Vector3(MAPSCALE, 1, MAPSCALE));
 	mapNode->translate(Ogre::Vector3(-17*MAPSCALE, 0.0, 16*MAPSCALE));
@@ -89,10 +89,10 @@ void TutorialApplication::createScene(void)
 		HMD_tracker = new vrpn_Tracker_Remote("T6002@161.67.196.44:3883");
 		HMD_tracker->register_change_handler(this, handle_HMD_tracker);
 
-		leftHand_tracker = new vrpn_Tracker_Remote("T6004@161.67.196.44:3883");
+		leftHand_tracker = new vrpn_Tracker_Remote("Left_hand@161.67.196.44:3883");
 		leftHand_tracker->register_change_handler(this, handle_leftHand_tracker);
 
-		rightHand_tracker = new vrpn_Tracker_Remote("T6001@161.67.196.44:3883");
+		rightHand_tracker = new vrpn_Tracker_Remote("Right_hand@161.67.196.44:3883");
 		rightHand_tracker->register_change_handler(this, handle_rightHand_tracker);
 	}
 

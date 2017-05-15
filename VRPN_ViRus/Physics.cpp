@@ -384,6 +384,8 @@ namespace ViRus
 	{
 		player->revive();
 		isUsed = true;
+
+		sound_mgr->playAudio(audio_healing, true);
 	}
 	void HitMedkit::delta_time(double itime)
 	{

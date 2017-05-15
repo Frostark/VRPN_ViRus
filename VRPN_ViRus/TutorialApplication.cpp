@@ -51,7 +51,11 @@ void TutorialApplication::createScene(void)
 
 	// Create a SceneNode and attach the Entity to it
 	Ogre::SceneNode* mapNode = mSceneMgr->getRootSceneNode()->createChildSceneNode("MapNode");
-	mapNode->setPosition(Ogre::Vector3(-17, 0.0, 16));
+
+	constexpr float MAPSCALE = 0.5;
+
+	mapNode->scale(Ogre::Vector3(MAPSCALE, 1, MAPSCALE));
+	mapNode->translate(Ogre::Vector3(-17*MAPSCALE, 0.0, 16*MAPSCALE));
 	mapNode->attachObject(ogreMap);
 
 	// Add collision detection to it

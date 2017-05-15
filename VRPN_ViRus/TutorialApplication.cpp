@@ -29,8 +29,16 @@ TutorialApplication::~TutorialApplication(void)
 //---------------------------------------------------------------------------
 void TutorialApplication::createScene(void)
 {
+	constexpr bool USING_IOTRACKER = false;
 	//Head's position
 	static const Ogre::Vector3 player_pos(0, 2, 0);
+
+	//Sounds
+	sound_mgr = SoundManager::createManager();
+	sound_mgr->init();
+	sound_mgr->setAudioPath("..\\..\\media\\sounds\\");
+
+	sound_mgr->loadAudio("fire_gun.wav", &audio_fire_gun, false);
 
 	//Set up the scene manager on the map
 	ViRus::Hittable::ptr_scn_mgr = mSceneMgr;
@@ -47,14 +55,18 @@ void TutorialApplication::createScene(void)
 	Ogre::ColourValue fadeColour(.9, .9, .9);
 	mWindow->getViewport(0)->setBackgroundColour(fadeColour);
 
-	mSceneMgr->setFog(Ogre::FOG_EXP2, fadeColour, 0.1);
+	mSceneMgr->setFog(Ogre::FOG_EXP2, fadeColour, 0.5);
 
 	// Create an Entity
 	Ogre::Entity* ogreMap = mSceneMgr->createEntity("Map", "virus_map.mesh");
 
 	// Create a SceneNode and attach the Entity to it
 	Ogre::SceneNode* mapNode = mSceneMgr->getRootSceneNode()->createChildSceneNode("MapNode");
-	mapNode->setPosition(Ogre::Vector3(-17, 0.0, 16));
+
+	constexpr float MAPSCALE = 0.2;
+
+	mapNode->scale(Ogre::Vector3(MAPSCALE, 1, MAPSCALE));
+	mapNode->translate(Ogre::Vector3(-17*MAPSCALE, 0.0, 16*MAPSCALE));
 	mapNode->attachObject(ogreMap);
 
 	// Add collision detection to it
@@ -84,11 +96,22 @@ void TutorialApplication::createScene(void)
 	newCamera->lookAt(Ogre::Vector3(Ogre::Vector3::NEGATIVE_UNIT_Z));
 	newCamera->setNearClipDistance(0.1);
 
-	//mCamera->setPosition(Ogre::Vector3::ZERO + player_pos);
-	//mCameraMan->setTopSpeed(3);
+	if (USING_IOTRACKER)
+	{
+		tracker = new vrpn_Tracker_Remote("iotracker@161.67.196.59:3883");
+		tracker->register_change_handler(this, handle_iotracker_tracker);
+	}
+	else
+	{
+		HMD_tracker = new vrpn_Tracker_Remote("T6002@161.67.196.44:3883");
+		HMD_tracker->register_change_handler(this, handle_HMD_tracker);
 
-	//tracker = new vrpn_Tracker_Remote("iotracker@161.67.196.59:3883");
-	//tracker->register_change_handler(this, handleHMDTracker);
+		leftHand_tracker = new vrpn_Tracker_Remote("Left_hand@161.67.196.44:3883");
+		leftHand_tracker->register_change_handler(this, handle_leftHand_tracker);
+
+		rightHand_tracker = new vrpn_Tracker_Remote("Right_hand@161.67.196.44:3883");
+		rightHand_tracker->register_change_handler(this, handle_rightHand_tracker);
+	}
 
 	vrpnButton1 = new vrpn_Button_Remote("joyWin32_1@localhost");
 	//vrpnButton2 = new vrpn_Button_Remote("joyWin32_2@localhost");
@@ -153,11 +176,11 @@ void TutorialApplication::createScene(void)
 	ViRus::Gun::ptr_scn_mgr = mSceneMgr;
 
 	//Left gun
-	left_gun = new ViRus::Gun(leftHandNode, "bullet.mesh",5);
+	left_gun = new ViRus::Gun(leftHandNode, leftHandEntity->getBoundingBox().getSize().z*0.75, "bullet.mesh",1);
 	left_gun->set_callback(left_gun_callback);
 
 	//Right gun
-	right_gun = new ViRus::Gun(rightHandNode, "bullet.mesh",5);
+	right_gun = new ViRus::Gun(rightHandNode, rightHandEntity->getBoundingBox().getSize().z*0.75, "bullet.mesh",1);
 	right_gun->set_callback(right_gun_callback);
 
 	//Spawner
@@ -170,20 +193,20 @@ void TutorialApplication::createScene(void)
 	constexpr int ENE_HEALTH = 50;
 	constexpr int ENE_DMG = 10;
 	constexpr float ENE_TIME_ATTACK = 1.0;
-	constexpr float ENE_VEL = 4;
+	constexpr float ENE_VEL = 1.5;
 	constexpr float ENE_SCALE = 1.8 / 200.0;
 	constexpr float ENE_RESTITUTION = 0.1;
 	constexpr float ENE_FRICTION = 5.0;
 	constexpr float ENE_MASS = 10.0;
 	constexpr float ENE_MAX_WAIT_TIME = 1.25;
-	spawner = new ViRus::Spawner(Ogre::Vector3::ZERO, 10, MAX_ENEMIES, ViRus::TeamType::ENEMY, ENE_HEALTH, ENE_DMG, ENE_TIME_ATTACK, ENE_VEL, "ninja.mesh", ENE_SCALE, ENE_RESTITUTION, ENE_FRICTION, ENE_MASS, ENE_MAX_WAIT_TIME, 0.4, "medkit.mesh");
+	spawner = new ViRus::Spawner(Ogre::Vector3::ZERO, 10.0*MAPSCALE, MAX_ENEMIES, ViRus::TeamType::ENEMY, ENE_HEALTH, ENE_DMG, ENE_TIME_ATTACK, ENE_VEL, "ninja.mesh", ENE_SCALE, ENE_RESTITUTION, ENE_FRICTION, ENE_MASS, ENE_MAX_WAIT_TIME, 0.4, "medkit.mesh");
 	spawner->set_callback(spawner_callback);
 	spawner->set_pickup_callback(pickup_callback);
 
 	//Character physics
 
 	//Add the collider to the head
-	Ogre::Vector3 HMD_cylinder_size(1, 2, 1);
+	Ogre::Vector3 HMD_cylinder_size(1.5, 2, 1.5);
 	HMD_cylinder_size *= 0.5;
 	
 	OgreBulletCollisions::CylinderCollisionShape *HMDCylinder = new OgreBulletCollisions::CylinderCollisionShape(HMD_cylinder_size, Ogre::Vector3::UNIT_Y);
@@ -224,7 +247,15 @@ bool TutorialApplication::frameRenderingQueued(const Ogre::FrameEvent& evt)
 	bool ret = BaseApplication::frameRenderingQueued(evt);
 
 	//Tracker loops
-	//tracker->mainloop();
+
+	if (tracker)
+		tracker->mainloop();
+	else
+	{
+		HMD_tracker->mainloop();
+		leftHand_tracker->mainloop();
+		rightHand_tracker->mainloop();
+	}
 	vrpnButton1->mainloop();
 	//vrpnButton2->mainloop();
 
@@ -341,13 +372,13 @@ void VRPN_CALLBACK TutorialApplication::handleButton2(void* userData, const vrpn
 		static_cast<TutorialApplication *>(userData)->shotRight = true;
 }
 
-void VRPN_CALLBACK TutorialApplication::handleHMDTracker(void* userData, const vrpn_TRACKERCB t)
+void VRPN_CALLBACK TutorialApplication::handle_iotracker_tracker(void* userData, const vrpn_TRACKERCB t)
 {
 	vrpn_TRACKERCB *pData = nullptr;
 	switch (t.sensor)
 	{
 	
-		case 3:
+		case 2:
 			pData = &(((TutorialApplication*)userData)->HMDData);
 			break;
 
@@ -369,6 +400,18 @@ void VRPN_CALLBACK TutorialApplication::handleHMDTracker(void* userData, const v
 		pData->pos[1] /= 1000;
 		pData->pos[2] /= 1000;
 	}
+}
+void VRPN_CALLBACK TutorialApplication::handle_HMD_tracker(void * userData, const vrpn_TRACKERCB t)
+{
+	(((TutorialApplication*)userData)->HMDData) = t;
+}
+void VRPN_CALLBACK TutorialApplication::handle_leftHand_tracker(void * userData, const vrpn_TRACKERCB t)
+{
+	(((TutorialApplication*)userData)->leftHandData) = t;
+}
+void VRPN_CALLBACK TutorialApplication::handle_rightHand_tracker(void * userData, const vrpn_TRACKERCB t)
+{
+	(((TutorialApplication*)userData)->rightHandData) = t;
 }
 void TutorialApplication::target_callback(ViRus::Hittable *h)
 {

@@ -37,6 +37,7 @@ namespace ViRus
 
 	protected:
 		Ogre::SceneNode *barrel;//Point at where the gun fires
+		float barrelSize;//Size of the gun's barrel
 		std::string mesh_name;//Number of the mesh of the bullet
 		double scale;//Scale of the entity
 		double dmg;//Damage of the bullet
@@ -49,8 +50,8 @@ namespace ViRus
 	public:
 
 		//Complete constructor
-		Gun(Ogre::SceneNode *ibarrel, std::string imesh_name, double iscale = DEF_SCALE, double idmg = DEF_DMG, double ispeed = DEF_SPEED, double imass = DEF_MASS, double imax_delta = DEF_MAX_TIME)
-			:barrel(ibarrel), mesh_name(imesh_name), scale(iscale), dmg(idmg), speed(ispeed), mass(imass), delta_time(0), max_delta(imax_delta), bullets()
+		Gun(Ogre::SceneNode *ibarrel, float ibarrelSize, std::string imesh_name, double iscale = DEF_SCALE, double idmg = DEF_DMG, double ispeed = DEF_SPEED, double imass = DEF_MASS, double imax_delta = DEF_MAX_TIME)
+			:barrel(ibarrel), barrelSize(ibarrelSize), mesh_name(imesh_name), scale(iscale), dmg(idmg), speed(ispeed), mass(imass), delta_time(0), max_delta(imax_delta), bullets()
 		{}
 
 		//Virtual distructor

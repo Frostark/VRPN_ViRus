@@ -44,6 +44,7 @@ void TutorialApplication::createScene(void)
 	sound_mgr->loadAudio("player_hit.wav", &audio_player_hit, false);
 	sound_mgr->loadAudio("player_dead.wav", &audio_player_dead, false);
 	sound_mgr->loadAudio("music_cemetery.wav", &music_cemetery, true);
+	sound_mgr->loadAudio("healing.wav", &audio_healing, false);
 
 	sound_mgr->playAudio(music_cemetery, true);
 

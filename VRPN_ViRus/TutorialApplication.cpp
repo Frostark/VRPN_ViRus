@@ -288,7 +288,7 @@ void VRPN_CALLBACK TutorialApplication::handleHMDTracker(void* userData, const v
 	switch (t.sensor)
 	{
 	
-		case 3:
+		case 2:
 			pData = &(((TutorialApplication*)userData)->HMDData);
 			break;
 

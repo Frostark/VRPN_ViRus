@@ -315,6 +315,21 @@ namespace ViRus
 
 		public:
 
+			//Take damage
+			void takeDamage(int idmg)
+			{
+				HitCharacter::takeDamage(idmg);
+
+				if (health > 0)
+				{
+					sound_mgr->playAudio(audio_enemy_hit, true);
+				}
+				else
+				{
+					sound_mgr->playAudio(audio_enemy_dead, true);
+				}
+			}
+
 			//Return true if this hittable is done and can be removed from the map, play death animation before dying
 			virtual bool finished();
 

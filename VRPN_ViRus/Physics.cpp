@@ -283,7 +283,20 @@ namespace ViRus
 			}
 
 			if (anim_controller)
-				anim_controller->addTime(itime);
+			{
+				float coef = 1;
+
+				switch (anim)
+				{
+					case CharacterAnimState::WALK:
+						coef = 0.6;
+						break;
+					default:
+						break;
+				}
+
+				anim_controller->addTime(itime*coef);
+			}
 		}
 
 

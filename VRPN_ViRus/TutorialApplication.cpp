@@ -149,7 +149,7 @@ void TutorialApplication::createScene(void)
 	constexpr int ENE_HEALTH = 50;
 	constexpr int ENE_DMG = 10;
 	constexpr float ENE_TIME_ATTACK = 1.0;
-	constexpr float ENE_VEL = 4;
+	constexpr float ENE_VEL = 1.5;
 	constexpr float ENE_SCALE = 1.8 / 200.0;
 	constexpr float ENE_RESTITUTION = 0.1;
 	constexpr float ENE_FRICTION = 5.0;

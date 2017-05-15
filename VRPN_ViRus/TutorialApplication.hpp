@@ -33,6 +33,8 @@ http://www.ogre3d.org/wiki/
 #include "Shapes/OgreBulletCollisionsBoxShape.h" // for boxes
 #include "Shapes/OgreBulletCollisionsCylinderShape.h" // for cylinders
 
+#include "OgreText.h"
+
 ViRus::HitPlayer *ptr_hero;
 ViRus::Spawner *spawner;
 ViRus::Gun *left_gun;
@@ -89,6 +91,8 @@ private:
 	static void left_gun_callback(ViRus::Hittable *h);
 	static void right_gun_callback(ViRus::Hittable *h);
 	static void pickup_callback(ViRus::Hittable *h);
+
+	OgreText *hud;
 };
 #endif // #ifndef __TutorialApplication_h_
 

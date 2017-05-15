@@ -23,6 +23,7 @@ http://www.ogre3d.org/wiki/
 
 SoundManager *sound_mgr = nullptr;
 unsigned int audio_fire_gun = 0, audio_enemy_hit = 0, audio_enemy_dead = 0, audio_player_hit = 0, audio_player_dead = 0, music_cemetery = 0, audio_healing = 0;
+int points = 0;
 
 //---------------------------------------------------------------------------
 BaseApplication::BaseApplication(void)

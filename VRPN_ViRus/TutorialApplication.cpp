@@ -29,6 +29,14 @@ TutorialApplication::~TutorialApplication(void)
 //---------------------------------------------------------------------------
 void TutorialApplication::createScene(void)
 {
+	hud = new OgreText();
+	hud->setText("Start!");    // Text to be displayed
+										  // Now it is possible to use the Ogre::String as parameter too
+	hud->setPos(0.5, 0.1f);        // Text position, using relative co-ordinates
+	hud->setCol(1.0f, 0, 0, 1);    // Text colour (Red, Green, Blue, Alpha)
+
+	points = 0;
+
 	constexpr bool USING_IOTRACKER = false;
 	//Head's position
 	static const Ogre::Vector3 player_pos(0, 2, 0);
@@ -275,6 +283,7 @@ bool TutorialApplication::frameRenderingQueued(const Ogre::FrameEvent& evt)
 //Update nodes' positions based on trackers
 bool TutorialApplication::processUnbufferedInput(const Ogre::FrameEvent& evt)
 {
+
 	//HMDNode->setPosition(Ogre::Vector3(HMDData.pos[0], HMDData.pos[1], HMDData.pos[2]));
 	//HMDNode->setOrientation(HMDData.quat[3], HMDData.quat[0], HMDData.quat[1], HMDData.quat[2]);
 
@@ -365,6 +374,8 @@ bool TutorialApplication::processUnbufferedInput(const Ogre::FrameEvent& evt)
 	left_gun->refresh(evt.timeSinceLastFrame);
 	right_gun->refresh(evt.timeSinceLastFrame);
 
+	hud->setText(Ogre::String("Health ") + Ogre::StringConverter().toString(ptr_hero ? ptr_hero->get_health() : 0) + Ogre::String("         Points ") + Ogre::StringConverter().toString(points));
+
 	return true;
 }
 
@@ -429,6 +440,7 @@ void TutorialApplication::target_callback(ViRus::Hittable *h)
 bool TutorialApplication::at_death_callback(ViRus::HitPlayer *player)
 {
 	player->revive();
+	points = 0;
 	if (spawner)
 		spawner->kill_all();
 

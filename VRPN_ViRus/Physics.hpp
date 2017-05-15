@@ -327,6 +327,7 @@ namespace ViRus
 				else
 				{
 					sound_mgr->playAudio(audio_enemy_dead, true);
+					points++;
 				}
 			}
 
@@ -403,6 +404,13 @@ namespace ViRus
 			void revive()
 			{
 				health = init_health;
+			}
+
+			int get_health()
+			{
+				if (health < 0)
+					return 0;
+				return health;
 			}
 	};
 

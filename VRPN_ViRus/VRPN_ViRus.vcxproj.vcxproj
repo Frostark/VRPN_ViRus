@@ -164,6 +164,7 @@
   <ItemGroup>
     <ClInclude Include="BaseApplication.hpp" />
     <ClInclude Include="Gameplay.hpp" />
+    <ClInclude Include="OgreText.h" />
     <ClInclude Include="Physics.hpp" />
     <ClInclude Include="SoundManager.h" />
     <ClInclude Include="TutorialApplication.hpp" />

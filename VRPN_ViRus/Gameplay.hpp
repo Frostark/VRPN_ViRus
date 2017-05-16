@@ -25,7 +25,7 @@ namespace ViRus
 	private:
 		static constexpr double DEF_SPEED = 100;//Default speed of the bullet
 		static constexpr double DEF_MAX_TIME = 0.25;//Default time between shots
-		static constexpr double DEF_DMG = 10;//Default damage
+		static constexpr double DEF_DMG = 26;//Default damage
 		static constexpr double DEF_SCALE = 0.01;//Default scale of the bullet
 		static constexpr double DEF_MASS = 100;//Default mass
 

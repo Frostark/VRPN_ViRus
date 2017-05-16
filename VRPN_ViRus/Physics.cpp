@@ -391,5 +391,9 @@ namespace ViRus
 	{
 		if (scene)
 			scene->yaw(Ogre::Radian(itime));
+
+		ttl -= itime;
+		if (ttl < 0)
+			isUsed = true;
 	}
 }

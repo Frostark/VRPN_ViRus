@@ -118,6 +118,7 @@ namespace ViRus
 		protected:
 
 			bool isUsed;
+			float ttl = 5;
 
 		protected:
 

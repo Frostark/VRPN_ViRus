@@ -49,6 +49,7 @@ namespace ViRus
 	class HitCharAttack;//Character that hits others upon contact
 	class HitPlayer;//Character of the player
 	class HitMap;//Map that goes from the physics object to the hittable object
+	class HitButton;//Hittable of a button
 
 	//Class definitions
 
@@ -446,6 +447,39 @@ namespace ViRus
 
 			//Delete all hittables
 			void clear_all();
+	};
+
+	//Hittable of a button
+	class HitButton : public Hittable
+	{
+		private: 
+			void(*at_button) (HitButton *);//Call this function, when the button is hit.
+
+		public:
+
+			//Complete constructor
+			HitButton(OgreBulletDynamics::RigidBody *ibody, OgreBulletCollisions::CollisionShape *ishape, Ogre::SceneNode *iscene)
+				:Hittable(ibody, ishape, iscene)
+			{}
+
+			//Destructor
+			~HitButton() {}
+
+			//Hit another hittable
+			virtual void hit(Hittable &h) 
+			{
+				HitProjectile *ptr = dynamic_cast<HitProjectile*>(&h);
+				if (ptr)
+				{
+					at_button(this);
+				}
+			}
+
+			//Set the callback to be called when the bulled hits the button
+			void set_at_button(void(*iat_button) (HitButton *))
+			{
+				at_button = iat_button;
+			}
 	};
 
 }

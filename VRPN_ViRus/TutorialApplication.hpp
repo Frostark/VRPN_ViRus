@@ -39,6 +39,7 @@ ViRus::HitPlayer *ptr_hero;
 ViRus::Spawner *spawner;
 ViRus::Gun *left_gun;
 ViRus::Gun *right_gun;
+bool running = true;
 
 class TutorialApplication : public BaseApplication
 {
@@ -91,6 +92,7 @@ private:
 	static void left_gun_callback(ViRus::Hittable *h);
 	static void right_gun_callback(ViRus::Hittable *h);
 	static void pickup_callback(ViRus::Hittable *h);
+	static void at_quit_callback(ViRus::HitButton *h);
 
 	OgreText *hud;
 };

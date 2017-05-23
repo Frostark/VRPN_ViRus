@@ -22,14 +22,14 @@ namespace ViRus
 			}
 		}
 	}
-	void DamageIndicator::draw()
+	void DamageIndicator::draw(Ogre2dManager &mgr)
 	{
 		for (std::pair<float, float> &ref : damages)
 		{
 			float display_angle = ref.first - angle;
 			Ogre::Vector2 dir(std::cos(display_angle), std::sin(display_angle));
 
-			//TODO: draw
+			mgr.spriteBltFull("damageIndicator.png", dir.x - 0.5, dir.y + 0.5, dir.x + 0.5, dir.y - 0.5);
 		}
 	}
 }

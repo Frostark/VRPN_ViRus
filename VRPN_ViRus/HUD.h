@@ -3,6 +3,7 @@
 #include <list>
 #include "BaseApplication.hpp"
 #include <cmath>
+#include "OgreSprites.hpp"
 
 namespace ViRus
 {
@@ -40,6 +41,6 @@ namespace ViRus
 		}
 
 		//Draw to screen
-		void draw();
+		void draw(Ogre2dManager &mgr);
 	};
 }

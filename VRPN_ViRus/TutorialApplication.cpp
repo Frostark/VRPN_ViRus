@@ -310,6 +310,8 @@ void TutorialApplication::createScene(void)
 
 	hitmap.add_hittable(*HMDbody->getBulletObject(), *ptr_hero);
 
+	Ogre::TextureManager::getSingleton().load("damageIndicator.png", ResourceGroupManager::DEFAULT_RESOURCE_GROUP_NAME);
+
 }
 
 void TutorialApplication::destroyScene(void)
@@ -369,9 +371,6 @@ bool TutorialApplication::processUnbufferedInput(const Ogre::FrameEvent& evt)
 
 	// Update Bullet Physics animation
 	mWorld->stepSimulation(evt.timeSinceLastFrame);
-	Ogre::TextureManager::getSingleton().load("img.png", ResourceGroupManager::DEFAULT_RESOURCE_GROUP_NAME);
-	ogre2dManager->spriteBltFull("img.png", -0.5, 0.5, 0.5, -0.5);
-	//Ogre::TexturePtr tp = Ogre::TextureManager::getSingleton().getByName("..\\..\\media\\images\\img.png");
 	btDynamicsWorld * mBulletWorld = mWorld->getBulletDynamicsWorld();
 	int numManifolds = mBulletWorld->getDispatcher()->getNumManifolds();
 	for (int i = 0;i<numManifolds;i++)
@@ -413,6 +412,7 @@ bool TutorialApplication::processUnbufferedInput(const Ogre::FrameEvent& evt)
 	right_gun->refresh(evt.timeSinceLastFrame);
 
 	damages.update_ttl(evt.timeSinceLastFrame);
+	damages.draw(*ogre2dManager);
 
 	hud->setText(Ogre::String("Health ") + Ogre::StringConverter().toString(ptr_hero ? ptr_hero->get_health() : 0) + Ogre::String("         Points ") + Ogre::StringConverter().toString(points));
 

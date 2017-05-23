@@ -11,6 +11,7 @@
 #include <list>
 #include <random>
 #include <cmath>
+#include <utility>
 #include "Physics.hpp"
 
 namespace ViRus
@@ -18,6 +19,8 @@ namespace ViRus
 	class Gun;//Basic gun
 
 	class Spawner;//Enemy spawner
+
+	class DamageIndicator;//2D screen indicator, direction of damage on the XZ plane
 
 			  //Basic gun
 	class Gun

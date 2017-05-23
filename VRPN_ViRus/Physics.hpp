@@ -12,6 +12,8 @@
 #include <map>
 #include <set>
 
+#include "HUD.h"
+
 namespace ViRus
 {
 
@@ -360,12 +362,16 @@ namespace ViRus
 			bool(*at_death) (HitPlayer *);//Call this function on finished(), when the player dies. Return the value that this callback returns
 			int init_health;//Initial health
 
+			DamageIndicator &di;//Reference to damage indicator
+
 		public:
 
 			//Complete constructor
-			HitPlayer(OgreBulletDynamics::RigidBody *ibody, OgreBulletCollisions::CollisionShape *ishape, Ogre::SceneNode *iscene, TeamType iteam, int ihealth)
-			:HitCharacter(ibody,ishape,iscene,iteam,ihealth), at_death(nullptr), init_health(ihealth)
-			{}
+			HitPlayer(OgreBulletDynamics::RigidBody *ibody, OgreBulletCollisions::CollisionShape *ishape, Ogre::SceneNode *iscene, TeamType iteam, int ihealth, DamageIndicator &idi)
+			:HitCharacter(ibody,ishape,iscene,iteam,ihealth), at_death(nullptr), init_health(ihealth), di(idi)
+			{
+				update_di();
+			}
 
 		public:
 
@@ -403,6 +409,8 @@ namespace ViRus
 				}
 			}
 
+			void directional_damage(Ogre::Vector3 pos);
+
 			void revive()
 			{
 				health = init_health;
@@ -414,6 +422,8 @@ namespace ViRus
 					return 0;
 				return health;
 			}
+
+			void update_di();//Update the damage indicator
 	};
 
 

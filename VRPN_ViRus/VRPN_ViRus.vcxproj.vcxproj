@@ -157,6 +157,7 @@
   <ItemGroup>
     <ClCompile Include="BaseApplication.cpp" />
     <ClCompile Include="Gameplay.cpp" />
+    <ClCompile Include="HUD.cpp" />
     <ClCompile Include="OgreSprites.cpp" />
     <ClCompile Include="Physics.cpp" />
     <ClCompile Include="SoundManager.cpp" />
@@ -165,6 +166,7 @@
   <ItemGroup>
     <ClInclude Include="BaseApplication.hpp" />
     <ClInclude Include="Gameplay.hpp" />
+    <ClInclude Include="HUD.h" />
     <ClInclude Include="OgreSprites.hpp" />
     <ClInclude Include="OgreText.h" />
     <ClInclude Include="Physics.hpp" />

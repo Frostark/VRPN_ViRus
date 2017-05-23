@@ -469,6 +469,9 @@ bool TutorialApplication::processUnbufferedInput(const Ogre::FrameEvent& evt)
 	damages.update_ttl(evt.timeSinceLastFrame);
 	damages.draw(*ogre2dManager);
 
+	if (ptr_hero)
+		ptr_hero->update_di();
+
 	hud->setText(Ogre::String("Health ") + Ogre::StringConverter().toString(ptr_hero ? ptr_hero->get_health() : 0) + Ogre::String("         Points ") + Ogre::StringConverter().toString(points));
 
 	return true;

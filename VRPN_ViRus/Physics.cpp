@@ -207,6 +207,14 @@ namespace ViRus
 							anim_controller->setLoop(false);
 							anim_controller->setEnabled(true);
 						}
+
+						//If direction of damage can be reported
+						HitPlayer *ptr_player = dynamic_cast<HitPlayer *>(ptr_hitcharacter);
+						if (ptr_player && scene)
+						{
+							ptr_player->directional_damage(scene->getPosition());
+						}
+
 					}
 				}
 			}
@@ -395,5 +403,23 @@ namespace ViRus
 		ttl -= itime;
 		if (ttl < 0)
 			isUsed = true;
+	}
+	void HitPlayer::directional_damage(Ogre::Vector3 pos)
+	{
+		if (scene)
+		{
+			Ogre::Vector3 dir = pos - scene->getPosition();
+			Ogre::Vector2 dir_2d(dir.x, dir.z);
+
+			di.add_damage(Ogre::Vector2::UNIT_X.angleTo(dir_2d).valueRadians());
+		}
+	}
+	void HitPlayer::update_di()
+	{
+		if (scene)
+		{
+			Ogre::Radian angle(scene->getOrientation().getYaw());
+			di.update_angle(angle.valueRadians());
+		}
 	}
 }

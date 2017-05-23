@@ -301,7 +301,7 @@ void TutorialApplication::createScene(void)
 	HMDbody->setKinematicObject(true);
 	HMDbody->disableDeactivation();
 
-	ptr_hero = new ViRus::HitPlayer(HMDbody, HMDCylinder, HMDNode, ViRus::TeamType::HERO, 100);
+	ptr_hero = new ViRus::HitPlayer(HMDbody, HMDCylinder, HMDNode, ViRus::TeamType::HERO, 100,damages);
 	ptr_hero->set_callback(target_callback);
 	ptr_hero->set_at_death(at_death_callback);
 
@@ -403,6 +403,8 @@ bool TutorialApplication::processUnbufferedInput(const Ogre::FrameEvent& evt)
 
 	left_gun->refresh(evt.timeSinceLastFrame);
 	right_gun->refresh(evt.timeSinceLastFrame);
+
+	damages.update_ttl(evt.timeSinceLastFrame);
 
 	hud->setText(Ogre::String("Health ") + Ogre::StringConverter().toString(ptr_hero ? ptr_hero->get_health() : 0) + Ogre::String("         Points ") + Ogre::StringConverter().toString(points));
 

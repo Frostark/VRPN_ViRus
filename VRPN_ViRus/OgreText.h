@@ -32,7 +32,7 @@ public:
 			// set the .ttf file name
 			font->setParameter("source", "Arial.ttf");
 			// set the size
-			font->setParameter("size", "26");
+			font->setParameter("size", "100");
 			// set the dpi
 			font->setParameter("resolution", "96");
 			// load the ttf
@@ -70,7 +70,7 @@ public:
 		textArea->setDimensions(1.0f, 1.0f);
 		textArea->setMetricsMode(Ogre::GMM_RELATIVE);
 		textArea->setFontName("MyFont");
-		textArea->setCharHeight(0.03f);
+		textArea->setCharHeight(0.08f);
 	}
 	void setText(String szString) // now You can use Ogre::String as text
 	{
@@ -78,7 +78,7 @@ public:
 		textArea->setDimensions(1.0f, 1.0f);
 		textArea->setMetricsMode(Ogre::GMM_RELATIVE);
 		textArea->setFontName("MyFont");
-		textArea->setCharHeight(0.03f);
+		textArea->setCharHeight(0.08f);
 	}
 	void setPos(float x, float y)
 	{

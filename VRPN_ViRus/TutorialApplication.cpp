@@ -32,7 +32,7 @@ void TutorialApplication::createScene(void)
 	hud = new OgreText();
 	hud->setText("Start!");    // Text to be displayed
 										  // Now it is possible to use the Ogre::String as parameter too
-	hud->setPos(0.5, 0.1f);        // Text position, using relative co-ordinates
+	hud->setPos(0.2, 0.1f);        // Text position, using relative co-ordinates
 	hud->setCol(1.0f, 0, 0, 1);    // Text colour (Red, Green, Blue, Alpha)
 
 	points = 0;
@@ -40,6 +40,9 @@ void TutorialApplication::createScene(void)
 	constexpr bool USING_IOTRACKER = false;
 	//Head's position
 	static const Ogre::Vector3 player_pos(0, 2, 0);
+
+	ogre2dManager = new Ogre2dManager;
+	ogre2dManager->init(mSceneMgr, Ogre::RENDER_QUEUE_OVERLAY, true);
 
 	//Sounds
 	sound_mgr = SoundManager::createManager();
@@ -71,7 +74,7 @@ void TutorialApplication::createScene(void)
 	Ogre::ColourValue fadeColour(.9, .9, .9);
 	mWindow->getViewport(0)->setBackgroundColour(fadeColour);
 
-	mSceneMgr->setFog(Ogre::FOG_EXP2, fadeColour, 0.1);
+	mSceneMgr->setFog(Ogre::FOG_EXP2, fadeColour, 0.1 );
 
 	// Create an Entity
 	Ogre::Entity* ogreMap = mSceneMgr->createEntity("Map", "virus_map.mesh");
@@ -299,7 +302,7 @@ void TutorialApplication::createScene(void)
 	constexpr float ENE_RESTITUTION = 0.1;
 	constexpr float ENE_FRICTION = 5.0;
 	constexpr float ENE_MASS = 10.0;
-	constexpr float ENE_MAX_WAIT_TIME = 1.25;
+	constexpr float ENE_MAX_WAIT_TIME = 4;
 	spawner = new ViRus::Spawner(Ogre::Vector3::ZERO, 10.0*MAPSCALE, MAX_ENEMIES, ViRus::TeamType::ENEMY, ENE_HEALTH, ENE_DMG, ENE_TIME_ATTACK, ENE_VEL, "ninja.mesh", ENE_SCALE, ENE_RESTITUTION, ENE_FRICTION, ENE_MASS, ENE_MAX_WAIT_TIME, 0.4, "medkit.mesh");
 	spawner->set_callback(spawner_callback);
 	spawner->set_pickup_callback(pickup_callback);
@@ -319,11 +322,13 @@ void TutorialApplication::createScene(void)
 	HMDbody->setKinematicObject(true);
 	HMDbody->disableDeactivation();
 
-	ptr_hero = new ViRus::HitPlayer(HMDbody, HMDCylinder, HMDNode, ViRus::TeamType::HERO, 100);
+	ptr_hero = new ViRus::HitPlayer(HMDbody, HMDCylinder, HMDNode, ViRus::TeamType::HERO, 100,damages);
 	ptr_hero->set_callback(target_callback);
 	ptr_hero->set_at_death(at_death_callback);
 
 	hitmap.add_hittable(*HMDbody->getBulletObject(), *ptr_hero);
+
+	Ogre::TextureManager::getSingleton().load("damageIndicator.png", ResourceGroupManager::DEFAULT_RESOURCE_GROUP_NAME);
 
 }
 
@@ -336,6 +341,9 @@ void TutorialApplication::destroyScene(void)
 	delete mWorld->getDebugDrawer();
 	mWorld->setDebugDrawer(nullptr);
 	delete mWorld;
+
+	ogre2dManager->end();
+	delete ogre2dManager;
 
 	delete left_gun;
 	delete right_gun;
@@ -381,7 +389,6 @@ bool TutorialApplication::processUnbufferedInput(const Ogre::FrameEvent& evt)
 
 	// Update Bullet Physics animation
 	mWorld->stepSimulation(evt.timeSinceLastFrame);
-
 	btDynamicsWorld * mBulletWorld = mWorld->getBulletDynamicsWorld();
 	int numManifolds = mBulletWorld->getDispatcher()->getNumManifolds();
 	for (int i = 0;i<numManifolds;i++)
@@ -458,6 +465,9 @@ bool TutorialApplication::processUnbufferedInput(const Ogre::FrameEvent& evt)
 
 	left_gun->refresh(evt.timeSinceLastFrame);
 	right_gun->refresh(evt.timeSinceLastFrame);
+
+	damages.update_ttl(evt.timeSinceLastFrame);
+	damages.draw(*ogre2dManager);
 
 	hud->setText(Ogre::String("Health ") + Ogre::StringConverter().toString(ptr_hero ? ptr_hero->get_health() : 0) + Ogre::String("         Points ") + Ogre::StringConverter().toString(points));
 

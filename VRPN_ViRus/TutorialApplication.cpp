@@ -32,7 +32,7 @@ void TutorialApplication::createScene(void)
 	hud = new OgreText();
 	hud->setText("Start!");    // Text to be displayed
 										  // Now it is possible to use the Ogre::String as parameter too
-	hud->setPos(0.5, 0.1f);        // Text position, using relative co-ordinates
+	hud->setPos(0.2, 0.1f);        // Text position, using relative co-ordinates
 	hud->setCol(1.0f, 0, 0, 1);    // Text colour (Red, Green, Blue, Alpha)
 
 	points = 0;

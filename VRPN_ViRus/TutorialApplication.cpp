@@ -83,6 +83,91 @@ void TutorialApplication::createScene(void)
 	mapNode->translate(Ogre::Vector3(-17*MAPSCALE, 0.0, 16*MAPSCALE));
 	mapNode->attachObject(ogreMap);
 
+	/*******************************************************************/
+	/*****************************CREATE MENU***************************/
+	/*******************************************************************/
+
+	
+	// Create an Menu Entity 
+	Ogre::Entity* ogreMenu = mSceneMgr->createEntity("Menu", "menu.mesh");
+	// Create a Menu and attach the Entity to it
+	Ogre::SceneNode* menuNode = mSceneMgr->getRootSceneNode()->createChildSceneNode("MenuNode");
+
+	menuNode->scale(Ogre::Vector3(0.1, 0.1, 0.1));
+	menuNode->translate(Ogre::Vector3(8, 1.1, -4));
+	menuNode->attachObject(ogreMenu);
+	menuNode->rotate(Vector3::NEGATIVE_UNIT_Y, Degree(90));
+
+	// Create an GoButton Entity 
+	Ogre::Entity* ogreGoButton = mSceneMgr->createEntity("GoButton", "goButton.mesh");
+	// Create a Menu and attach the Entity to it
+	Ogre::SceneNode* goButtonNode = mSceneMgr->getRootSceneNode()->createChildSceneNode("GoButtonNode");
+	 
+	goButtonNode->scale(Ogre::Vector3(0.1, 0.1, 0.1));
+	goButtonNode->translate(Ogre::Vector3(8, 1.15, -5));
+	goButtonNode->attachObject(ogreGoButton);
+	goButtonNode->rotate(Vector3::NEGATIVE_UNIT_Y, Degree(90));
+
+
+
+	// Create an SoudButton Entity 
+	Ogre::Entity* ogreSoundButton = mSceneMgr->createEntity("SoundButton", "soundButton.mesh");
+	// Create a Menu and attach the Entity to it
+	Ogre::SceneNode* soundButtonNode = mSceneMgr->getRootSceneNode()->createChildSceneNode("SoundButtonNode");
+
+	soundButtonNode->scale(Ogre::Vector3(0.1, 0.1, 0.1));
+	soundButtonNode->translate(Ogre::Vector3(8, 1.15, -2));
+	soundButtonNode->attachObject(ogreSoundButton);
+	soundButtonNode->rotate(Vector3::NEGATIVE_UNIT_Y, Degree(90));
+
+	// Create an QuitButton Entity 
+	Ogre::Entity* ogreQuitButton = mSceneMgr->createEntity("QuitButton", "quitButton.mesh");
+	Ogre::SceneNode* quitButtonNode = mSceneMgr->getRootSceneNode()->createChildSceneNode("QuitButtonNode");
+
+	quitButtonNode->scale(Ogre::Vector3(0.1, 0.1, 0.1));
+	quitButtonNode->translate(Ogre::Vector3(8, 1.15, 1));
+	quitButtonNode->attachObject(ogreQuitButton);
+	quitButtonNode->rotate(Vector3::NEGATIVE_UNIT_Y, Degree(90));
+
+	Ogre::Vector3 quitSize = ogreQuitButton->getBoundingBox().getSize()*0.5*0.1;
+	Ogre::Vector3 quitPosition = quitButtonNode->getPosition();
+	Ogre::Quaternion quitRot = quitButtonNode->getOrientation();
+
+	OgreBulletCollisions::BoxCollisionShape *quitBox = new OgreBulletCollisions::BoxCollisionShape(quitSize);
+	OgreBulletDynamics::RigidBody *quitBody = new OgreBulletDynamics::RigidBody("QuitBody", mWorld, ViRus::ColliderType::OBSTACLE, ViRus::ColliderType::HERO);
+	quitBody->setStaticShape(quitButtonNode, quitBox, 1, 1, quitPosition, quitRot);
+	quitBody->setKinematicObject(true);
+	quitBody->disableDeactivation();
+
+	ViRus::HitButton *ptr_quitButton = new ViRus::HitButton(quitBody, quitBox, quitButtonNode);
+	
+	ptr_quitButton->set_at_button(at_quit_callback);
+
+	hitmap.add_hittable(*quitBody->getBulletObject(), *ptr_quitButton);
+
+
+	
+	/*// Create an Congatulations Entity 
+	Ogre::Entity* ogreCongratulations = mSceneMgr->createEntity("Congratulations", "congratulations.mesh");
+	Ogre::SceneNode* congratulationsNode = mSceneMgr->getRootSceneNode()->createChildSceneNode("CongratulationsNode");
+
+	congratulationsNode->scale(Ogre::Vector3(0.1, 0.1, 0.1));
+	congratulationsNode->translate(Ogre::Vector3(6, 1.15, -6));
+	congratulationsNode->attachObject(ogreCongratulations);
+	congratulationsNode->rotate(Vector3::NEGATIVE_UNIT_Y, Degree(90));*/
+
+	// Create an Dead Entity 
+	/*Ogre::Entity* ogreDead = mSceneMgr->createEntity("Dead", "dead.mesh");
+	Ogre::SceneNode* deadNode = mSceneMgr->getRootSceneNode()->createChildSceneNode("DeadNode");
+
+	deadNode->scale(Ogre::Vector3(0.1, 0.1, 0.1));
+	deadNode->translate(Ogre::Vector3(6, 1.15, -6));
+	deadNode->attachObject(ogreDead);
+	deadNode->rotate(Vector3::NEGATIVE_UNIT_Y, Degree(90));*/
+
+	/*******************************************************************/
+
+
 	// Add collision detection to it
 	OgreBulletCollisions::CollisionShape *floorShape;
 	floorShape = new OgreBulletCollisions::StaticPlaneCollisionShape(Ogre::Vector3::UNIT_Y, 0); // (normal vector, distance)
@@ -259,7 +344,7 @@ bool TutorialApplication::frameRenderingQueued(const Ogre::FrameEvent& evt)
 
 	if (!processUnbufferedInput(evt)) return false;
 
-	return ret;
+	return ret && running;
 }
 
 //Update nodes' positions based on trackers
@@ -408,6 +493,10 @@ void TutorialApplication::right_gun_callback(ViRus::Hittable * h)
 void TutorialApplication::pickup_callback(ViRus::Hittable * h)
 {
 	spawner->medkit_callback(h);
+}
+void TutorialApplication::at_quit_callback(ViRus::HitButton * h)
+{
+	running = false;
 }
 //-------------------------------------------------------------------------------------
 

@@ -39,6 +39,9 @@ void TutorialApplication::createScene(void)
 
 	constexpr bool USING_IOTRACKER = false;
 
+	ogre2dManager = new Ogre2dManager;
+	ogre2dManager->init(mSceneMgr, Ogre::RENDER_QUEUE_OVERLAY, true);
+
 	//Sounds
 	sound_mgr = SoundManager::createManager();
 	sound_mgr->init();
@@ -319,6 +322,9 @@ void TutorialApplication::destroyScene(void)
 	mWorld->setDebugDrawer(nullptr);
 	delete mWorld;
 
+	ogre2dManager->end();
+	delete ogre2dManager;
+
 	delete left_gun;
 	delete right_gun;
 }
@@ -363,7 +369,9 @@ bool TutorialApplication::processUnbufferedInput(const Ogre::FrameEvent& evt)
 
 	// Update Bullet Physics animation
 	mWorld->stepSimulation(evt.timeSinceLastFrame);
-
+	Ogre::TextureManager::getSingleton().load("img.png", ResourceGroupManager::DEFAULT_RESOURCE_GROUP_NAME);
+	ogre2dManager->spriteBltFull("img.png", -0.5, 0.5, 0.5, -0.5);
+	//Ogre::TexturePtr tp = Ogre::TextureManager::getSingleton().getByName("..\\..\\media\\images\\img.png");
 	btDynamicsWorld * mBulletWorld = mWorld->getBulletDynamicsWorld();
 	int numManifolds = mBulletWorld->getDispatcher()->getNumManifolds();
 	for (int i = 0;i<numManifolds;i++)

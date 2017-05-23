@@ -34,6 +34,7 @@ http://www.ogre3d.org/wiki/
 #include "Shapes/OgreBulletCollisionsCylinderShape.h" // for cylinders
 
 #include "OgreText.h"
+#include "OgreSprites.hpp"
 
 ViRus::HitPlayer *ptr_hero;
 ViRus::Spawner *spawner;
@@ -94,6 +95,7 @@ private:
 	static void pickup_callback(ViRus::Hittable *h);
 	static void at_quit_callback(ViRus::HitButton *h);
 
+	Ogre2dManager* ogre2dManager;
 	OgreText *hud;
 };
 #endif // #ifndef __TutorialApplication_h_

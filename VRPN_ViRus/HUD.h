@@ -43,4 +43,33 @@ namespace ViRus
 		//Draw to screen
 		void draw(Ogre2dManager &mgr);
 	};
+
+	//2D radar
+	class Radar
+	{
+		private:
+
+			Ogre::Vector3 player_pos;
+			Ogre::Quaternion player_rot;
+
+			Ogre::Vector2 radar_pos;
+
+		public:
+
+			Radar()
+			:player_pos(), player_rot(), radar_pos(-0.85, -0.65)
+			{}
+
+		public:
+
+			void update_player(Ogre::Vector3 ipos, Ogre::Quaternion irot)
+			{
+				player_pos = ipos;
+				player_rot = irot;
+			}
+
+			void draw_radar(Ogre2dManager &mgr);
+
+			void draw_enemy(Ogre2dManager &mgr, Ogre::Vector3 pos);
+	};
 }

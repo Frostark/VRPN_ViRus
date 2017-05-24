@@ -363,14 +363,16 @@ namespace ViRus
 			int init_health;//Initial health
 
 			DamageIndicator &di;//Reference to damage indicator
+			Radar &rdr;//Reference to radar
 
 		public:
 
 			//Complete constructor
-			HitPlayer(OgreBulletDynamics::RigidBody *ibody, OgreBulletCollisions::CollisionShape *ishape, Ogre::SceneNode *iscene, TeamType iteam, int ihealth, DamageIndicator &idi)
-			:HitCharacter(ibody,ishape,iscene,iteam,ihealth), at_death(nullptr), init_health(ihealth), di(idi)
+			HitPlayer(OgreBulletDynamics::RigidBody *ibody, OgreBulletCollisions::CollisionShape *ishape, Ogre::SceneNode *iscene, TeamType iteam, int ihealth, DamageIndicator &idi, Radar &irdr)
+			:HitCharacter(ibody,ishape,iscene,iteam,ihealth), at_death(nullptr), init_health(ihealth), di(idi),rdr(irdr)
 			{
 				update_di();
+				update_rdr();
 			}
 
 		public:
@@ -424,6 +426,8 @@ namespace ViRus
 			}
 
 			void update_di();//Update the damage indicator
+
+			void update_rdr();//Update the radar
 	};
 
 

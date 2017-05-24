@@ -39,8 +39,13 @@ void TutorialApplication::createScene(void)
 
 	constexpr bool USING_IOTRACKER = false;
 
-	ogre2dManager = new Ogre2dManager;
-	ogre2dManager->init(mSceneMgr, Ogre::RENDER_QUEUE_OVERLAY, true);
+	ogre2dManager_radar = new Ogre2dManager();
+	ogre2dManager_dot = new Ogre2dManager();
+	ogre2dManager_damage = new Ogre2dManager();
+
+	ogre2dManager_radar->init(mSceneMgr, Ogre::RENDER_QUEUE_OVERLAY, true);
+	ogre2dManager_dot->init(mSceneMgr, Ogre::RENDER_QUEUE_OVERLAY, true);
+	ogre2dManager_damage->init(mSceneMgr, Ogre::RENDER_QUEUE_OVERLAY, true);
 
 	//Sounds
 	sound_mgr = SoundManager::createManager();
@@ -325,8 +330,12 @@ void TutorialApplication::destroyScene(void)
 	mWorld->setDebugDrawer(nullptr);
 	delete mWorld;
 
-	ogre2dManager->end();
-	delete ogre2dManager;
+	ogre2dManager_damage->end();
+	delete ogre2dManager_damage;
+	ogre2dManager_dot->end();
+	delete ogre2dManager_dot;
+	ogre2dManager_radar->end();
+	delete ogre2dManager_radar;
 
 	delete left_gun;
 	delete right_gun;
@@ -413,8 +422,8 @@ bool TutorialApplication::processUnbufferedInput(const Ogre::FrameEvent& evt)
 	right_gun->refresh(evt.timeSinceLastFrame);
 
 	damages.update_ttl(evt.timeSinceLastFrame);
-	damages.draw(*ogre2dManager);
-	radar.draw_radar(*ogre2dManager);
+	damages.draw(*ogre2dManager_damage);
+	radar.draw_radar(*ogre2dManager_radar);
 
 	if (ptr_hero)
 	{
@@ -422,7 +431,7 @@ bool TutorialApplication::processUnbufferedInput(const Ogre::FrameEvent& evt)
 		ptr_hero->update_rdr();
 
 		if (spawner)
-			spawner->draw_radar(radar, *ogre2dManager);
+			spawner->draw_radar(radar, *ogre2dManager_dot);
 
 
 	}

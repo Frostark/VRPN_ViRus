@@ -133,13 +133,17 @@ void TutorialApplication::createScene(void)
 	// Create an QuitButton Entity 
 	Ogre::Entity* ogreQuitButton = mSceneMgr->createEntity("QuitButton", "quitButton.mesh");
 	Ogre::SceneNode* quitButtonNode = mSceneMgr->getRootSceneNode()->createChildSceneNode("QuitButtonNode");
+	Ogre::SceneNode* entQuitNode = quitButtonNode->createChildSceneNode();
+	entQuitNode->attachObject(ogreQuitButton);
 
 	quitButtonNode->scale(Ogre::Vector3(0.1, 0.1, 0.1));
 	quitButtonNode->translate(Ogre::Vector3(8, 1.15, 1));
-	quitButtonNode->attachObject(ogreQuitButton);
 	quitButtonNode->rotate(Vector3::NEGATIVE_UNIT_Y, Degree(90));
 
 	Ogre::Vector3 quitSize = ogreQuitButton->getBoundingBox().getSize()*0.5*0.1;
+	
+	entQuitNode->translate(Ogre::Vector3(-quitSize.x,-quitSize.y,quitSize.z),Ogre::Node::TS_WORLD);
+	
 	Ogre::Vector3 quitPosition = quitButtonNode->getPosition();
 	Ogre::Quaternion quitRot = quitButtonNode->getOrientation();
 

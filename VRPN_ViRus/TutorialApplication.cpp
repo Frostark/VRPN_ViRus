@@ -135,12 +135,13 @@ void TutorialApplication::createScene(void)
 	entQuitNode->attachObject(ogreQuitButton);
 
 	quitButtonNode->scale(Ogre::Vector3(0.1, 0.1, 0.1));
-	quitButtonNode->translate(Ogre::Vector3(8, 1.15, 1));
-	quitButtonNode->rotate(Vector3::NEGATIVE_UNIT_Y, Degree(90));
 
 	Ogre::Vector3 quitSize = ogreQuitButton->getBoundingBox().getSize()*0.5*0.1;
 	
-	entQuitNode->translate(Ogre::Vector3(-quitSize.x,-quitSize.y,quitSize.z),Ogre::Node::TS_WORLD);
+	entQuitNode->translate(Ogre::Vector3(-quitSize.x, -quitSize.y,0),Ogre::Node::TS_WORLD);
+
+	quitButtonNode->rotate(Vector3::NEGATIVE_UNIT_Y, Degree(90));
+	quitButtonNode->translate(Ogre::Vector3(8, 2.3, 2));
 	
 	Ogre::Vector3 quitPosition = quitButtonNode->getPosition();
 	Ogre::Quaternion quitRot = quitButtonNode->getOrientation();

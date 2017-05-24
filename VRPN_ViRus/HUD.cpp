@@ -26,8 +26,8 @@ namespace ViRus
 	{
 		for (std::pair<float, float> &ref : damages)
 		{
-			float display_angle = ref.first - angle + Ogre::Degree(270).valueRadians();
-			Ogre::Vector2 dir(std::cos(display_angle), std::sin(display_angle));
+			float display_angle = ref.first - angle;
+			Ogre::Vector2 dir(std::cos(display_angle),std::sin(display_angle));
 
 			mgr.spriteBltFull("damageIndicator.png", dir.x - 0.5, dir.y + 0.5, dir.x + 0.5, dir.y - 0.5);
 		}

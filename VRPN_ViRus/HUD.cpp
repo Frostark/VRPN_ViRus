@@ -29,7 +29,13 @@ namespace ViRus
 			float display_angle = ref.first - angle;
 			Ogre::Vector2 dir(std::cos(display_angle),std::sin(display_angle));
 
-			mgr.spriteBltFull("damageIndicator.png", dir.x - 0.5, dir.y + 0.5, dir.x + 0.5, dir.y - 0.5);
+			static constexpr float BALL_SIZE = 0.05;
+			static constexpr float DISTANCE_CENTER = 0.75;
+			static constexpr float ASPECT_RATIO = 16.0 / 9.0;
+
+			dir *= DISTANCE_CENTER;
+
+			mgr.spriteBltFull("damageIndicator.png", dir.x - BALL_SIZE, dir.y + BALL_SIZE*ASPECT_RATIO, dir.x + BALL_SIZE, dir.y - BALL_SIZE*ASPECT_RATIO);
 		}
 	}
 }

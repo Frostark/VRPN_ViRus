@@ -331,7 +331,6 @@ namespace ViRus
 				else
 				{
 					sound_mgr->playAudio(audio_enemy_dead, true);
-					points++;
 				}
 			}
 

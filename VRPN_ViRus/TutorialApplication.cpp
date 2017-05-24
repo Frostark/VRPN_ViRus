@@ -322,14 +322,15 @@ void TutorialApplication::createScene(void)
 	HMDbody->setKinematicObject(true);
 	HMDbody->disableDeactivation();
 
-	ptr_hero = new ViRus::HitPlayer(HMDbody, HMDCylinder, HMDNode, ViRus::TeamType::HERO, 100,damages);
+	ptr_hero = new ViRus::HitPlayer(HMDbody, HMDCylinder, HMDNode, ViRus::TeamType::HERO, 100,damages,radar);
 	ptr_hero->set_callback(target_callback);
 	ptr_hero->set_at_death(at_death_callback);
 
 	hitmap.add_hittable(*HMDbody->getBulletObject(), *ptr_hero);
 
 	Ogre::TextureManager::getSingleton().load("damageIndicator.png", ResourceGroupManager::DEFAULT_RESOURCE_GROUP_NAME);
-
+	Ogre::TextureManager::getSingleton().load("radar.png", ResourceGroupManager::DEFAULT_RESOURCE_GROUP_NAME);
+	Ogre::TextureManager::getSingleton().load("enemyDot.png", ResourceGroupManager::DEFAULT_RESOURCE_GROUP_NAME);
 }
 
 void TutorialApplication::destroyScene(void)
@@ -468,9 +469,18 @@ bool TutorialApplication::processUnbufferedInput(const Ogre::FrameEvent& evt)
 
 	damages.update_ttl(evt.timeSinceLastFrame);
 	damages.draw(*ogre2dManager);
+	radar.draw_radar(*ogre2dManager);
 
 	if (ptr_hero)
+	{
 		ptr_hero->update_di();
+		ptr_hero->update_rdr();
+
+		if (spawner)
+			spawner->draw_radar(radar, *ogre2dManager);
+
+
+	}
 
 	hud->setText(Ogre::String("Health ") + Ogre::StringConverter().toString(ptr_hero ? ptr_hero->get_health() : 0) + Ogre::String("         Points ") + Ogre::StringConverter().toString(points));
 

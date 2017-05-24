@@ -425,4 +425,11 @@ namespace ViRus
 			di.update_angle(Vector2::UNIT_Y.angleTo(dir_2d).valueRadians());
 		}
 	}
+	void HitPlayer::update_rdr()
+	{
+		if (scene)
+		{
+			rdr.update_player(scene->getPosition(), scene->getOrientation());
+		}
+	}
 }

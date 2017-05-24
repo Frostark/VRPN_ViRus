@@ -13,6 +13,7 @@
 #include <cmath>
 #include <utility>
 #include "Physics.hpp"
+#include "HUD.h"
 
 namespace ViRus
 {
@@ -166,6 +167,8 @@ namespace ViRus
 			void deltaTime(double itime);
 
 			void spawn_medkit(Ogre::Vector3 pos);
+
+			void draw_radar(Radar &rdr, Ogre2dManager &mgr);
 	};
 }
 

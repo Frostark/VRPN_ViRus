@@ -209,4 +209,15 @@ namespace ViRus
 			pickups_spawned++;
 		}
 	}
+	void Spawner::draw_radar(Radar & rdr, Ogre2dManager & mgr)
+	{
+		for (HitCharAttack *ptr : enemies)
+		{
+			Ogre::Vector3 pos;
+			if (ptr->get_position(pos))
+			{
+				rdr.draw_enemy(mgr, pos);
+			}
+		}
+	}
 }

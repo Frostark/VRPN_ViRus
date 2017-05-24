@@ -88,6 +88,7 @@ private:
 	ViRus::HitMap hitmap;
 
 	ViRus::DamageIndicator damages;
+	ViRus::Radar radar;
 
 	static void target_callback(ViRus::Hittable *);
 	static bool at_death_callback(ViRus::HitPlayer *player);

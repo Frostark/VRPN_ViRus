@@ -95,16 +95,13 @@ void TutorialApplication::createScene(void)
 	/*****************************CREATE MENU***************************/
 	/*******************************************************************/
 
+	ViRus::Menu::ptr_scn_mgr = mSceneMgr;
+	ViRus::Menu::hitmap = &hitmap;
+	ViRus::Menu::mWorld = mWorld;
 	
-	// Create an Menu Entity 
-	Ogre::Entity* ogreMenu = mSceneMgr->createEntity("Menu", "menu.mesh");
-	// Create a Menu and attach the Entity to it
-	Ogre::SceneNode* menuNode = mSceneMgr->getRootSceneNode()->createChildSceneNode("MenuNode");
+	ViRus::Menu menu = ViRus::Menu("menu.mesh");
 
-	menuNode->scale(Ogre::Vector3(0.1, 0.1, 0.1));
-	menuNode->translate(Ogre::Vector3(8, 1.1, -4));
-	menuNode->attachObject(ogreMenu);
-	menuNode->rotate(Vector3::NEGATIVE_UNIT_Y, Degree(90));
+	menu.drawMenu();
 
 	// Create an GoButton Entity 
 	Ogre::Entity* ogreGoButton = mSceneMgr->createEntity("GoButton", "goButton.mesh");

@@ -15,6 +15,11 @@ namespace ViRus
 	OgreBulletDynamics::DynamicsWorld *Spawner::mWorld=nullptr; // OgreBullet World
 	std::default_random_engine Spawner::re;//Random engine
 
+	Ogre::SceneManager *Menu::ptr_scn_mgr=nullptr;//Scene manager
+	HitMap *Menu::hitmap=nullptr;//Hittable container
+	OgreBulletDynamics::DynamicsWorld *Menu::mWorld=nullptr; // OgreBullet World
+	int Menu::nButtons=0; // Number of buttons in the menu
+
 	bool Gun::fire()
 	{
 		if (!delta_time)
@@ -220,5 +225,18 @@ namespace ViRus
 				rdr.draw_enemy(mgr, pos);
 			}
 		}
+	}
+
+	void Menu::drawMenu()
+	{
+		// Create an Menu Entity 
+		Ogre::Entity* ogreMenu = ptr_scn_mgr->createEntity("Menu", menu_mesh);
+		// Create a Menu and attach the Entity to it
+		Ogre::SceneNode* menuNode = ptr_scn_mgr->getRootSceneNode()->createChildSceneNode("MenuNode");
+
+		menuNode->scale(Ogre::Vector3(0.1, 0.1, 0.1));
+		menuNode->translate(Ogre::Vector3(8, 1.1, -4));
+		menuNode->attachObject(ogreMenu);
+		menuNode->rotate(Vector3::NEGATIVE_UNIT_Y, Degree(90));
 	}
 }

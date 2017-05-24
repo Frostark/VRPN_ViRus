@@ -409,7 +409,7 @@ namespace ViRus
 		if (scene)
 		{
 			Ogre::Vector3 dir = pos - scene->getPosition();
-			Ogre::Vector2 dir_2d(dir.x, dir.z);
+			Ogre::Vector2 dir_2d(dir.x, - dir.z);
 
 			di.add_damage(Ogre::Vector2::UNIT_X.angleTo(dir_2d).valueRadians());
 		}
@@ -418,8 +418,11 @@ namespace ViRus
 	{
 		if (scene)
 		{
-			Ogre::Radian angle(scene->getOrientation().getYaw());
-			di.update_angle(angle.valueRadians());
+			Ogre::Vector3 dir(scene->getOrientation()*Ogre::Vector3::NEGATIVE_UNIT_Z);
+
+			Ogre::Vector2 dir_2d(dir.x, -dir.z);
+
+			di.update_angle(Vector2::UNIT_Y.angleTo(dir_2d).valueRadians());
 		}
 	}
 }

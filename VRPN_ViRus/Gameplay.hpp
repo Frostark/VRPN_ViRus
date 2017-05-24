@@ -23,6 +23,8 @@ namespace ViRus
 
 	class DamageIndicator;//2D screen indicator, direction of damage on the XZ plane
 
+	class Menu; // Draw Main menu
+
 			  //Basic gun
 	class Gun
 	{
@@ -169,6 +171,38 @@ namespace ViRus
 			void spawn_medkit(Ogre::Vector3 pos);
 
 			void draw_radar(Radar &rdr, Ogre2dManager &mgr);
+	};
+
+	//Draw main menu
+	class Menu
+	{
+		public:
+			static Ogre::SceneManager *ptr_scn_mgr;//Scene manager
+			static HitMap *hitmap;//Hittable container
+			static OgreBulletDynamics::DynamicsWorld *mWorld; // OgreBullet World
+			static int nButtons; // Number of buttons in the menu
+
+		private:
+			std::string menu_mesh; //Main menu mesh
+
+		public:
+
+			// Complete constructor
+			Menu(std::string imenu_mesh)
+			: menu_mesh(imenu_mesh)
+			{}
+
+			// Destructor
+			~Menu() {}
+
+		public:
+
+			// Draw menu without buttons
+			void drawMenu();
+			
+			// Add a new button
+			void addMenuButton(std::string mesh_name);
+
 	};
 }
 

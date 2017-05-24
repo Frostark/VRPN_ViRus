@@ -232,6 +232,7 @@ namespace ViRus
 				switch (anim)
 				{
 					case CharacterAnimState::END:
+						points++;
 						return true;
 					case CharacterAnimState::DEATH:
 						return false;

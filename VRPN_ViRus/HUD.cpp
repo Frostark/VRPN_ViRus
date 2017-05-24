@@ -40,7 +40,7 @@ namespace ViRus
 	}
 	void Radar::draw_radar(Ogre2dManager &mgr)
 	{
-		static constexpr float RADAR_SIZE = 0.05;
+		static constexpr float RADAR_SIZE = 0.2;
 		static constexpr float ASPECT_RATIO = 16.0 / 9.0;
 
 		mgr.spriteBltFull("radar.png", radar_pos.x - RADAR_SIZE, radar_pos.y + RADAR_SIZE * ASPECT_RATIO, radar_pos.x + RADAR_SIZE, radar_pos.y - RADAR_SIZE*ASPECT_RATIO);
@@ -48,8 +48,8 @@ namespace ViRus
 	void Radar::draw_enemy(Ogre2dManager &mgr, Ogre::Vector3 pos)
 	{
 		static constexpr float DOT_SIZE = 0.01;
-		static constexpr float COEF_DISTANCE_CENTER = 0.1;
-		static constexpr float MAX_DISTANCE = 1;
+		static constexpr float COEF_DISTANCE_CENTER = 0.02;
+		static constexpr float MAX_DISTANCE = 0.2;
 		static constexpr float ASPECT_RATIO = 16.0 / 9.0;
 
 		Ogre::Vector3 dir(pos - player_pos);
@@ -70,6 +70,7 @@ namespace ViRus
 
 		if (display_vector.length() <= MAX_DISTANCE)
 		{
+			display_vector.y *= ASPECT_RATIO;
 			display_vector += radar_pos;
 
 			mgr.spriteBltFull("enemyDot.png", display_vector.x - DOT_SIZE, display_vector.y + DOT_SIZE * ASPECT_RATIO, display_vector.x + DOT_SIZE, display_vector.y - DOT_SIZE*ASPECT_RATIO);

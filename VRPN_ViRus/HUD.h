@@ -57,7 +57,7 @@ namespace ViRus
 		public:
 
 			Radar()
-			:player_pos(), player_rot(), radar_pos(-0.85, -0.65)
+			:player_pos(), player_rot(), radar_pos(-0.775, -0.5)
 			{}
 
 		public:

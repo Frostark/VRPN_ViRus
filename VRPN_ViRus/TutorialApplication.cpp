@@ -427,6 +427,9 @@ bool TutorialApplication::processUnbufferedInput(const Ogre::FrameEvent& evt)
 	else
 		hud->setText("");
 
+	if (points >= MAX_POINTS)
+		TutorialApplication::at_death_callback(ptr_hero);
+
 	return true;
 }
 
@@ -501,8 +504,8 @@ bool TutorialApplication::at_death_callback(ViRus::HitPlayer *player)
 	player->revive();
 
 
-	// Create an QuitButton Entity 
-	Ogre::Entity* ogreButton = app->mSceneMgr->createEntity("DeadPanel" , "dead.mesh");
+	// Create an QuitButton Entity
+	Ogre::Entity* ogreButton = app->mSceneMgr->createEntity("DeadPanel" , points>=MAX_POINTS?"congratulations.mesh":"dead.mesh");
 	Ogre::SceneNode* buttonNode = app->mSceneMgr->getRootSceneNode()->createChildSceneNode();
 	Ogre::SceneNode* entNode = buttonNode->createChildSceneNode();
 	entNode->attachObject(ogreButton);
@@ -513,7 +516,7 @@ bool TutorialApplication::at_death_callback(ViRus::HitPlayer *player)
 
 	entNode->translate(Ogre::Vector3(-size.x, -size.y, 0), Ogre::Node::TS_WORLD);
 
-	Ogre::Vector3 pos_panel(6, 1.15, -6);
+	Ogre::Vector3 pos_panel(6, 2.5, 0);
 
 	buttonNode->rotate(Vector3::NEGATIVE_UNIT_Y, Degree(90));
 	buttonNode->translate(pos_panel);

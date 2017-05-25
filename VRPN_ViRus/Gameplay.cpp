@@ -24,7 +24,8 @@ namespace ViRus
 	{
 		if (!delta_time)
 		{
-			sound_mgr->playAudio(audio_fire_gun, true);			
+			if (audioEnabled)
+				sound_mgr->playAudio(audio_fire_gun, true);			
 			Ogre::Vector3 from = barrel->_getDerivedPosition();
 			Ogre::Vector3 dir = barrel->_getDerivedOrientation() * Ogre::Vector3(0, 0, -1);
 			from += dir*barrelSize;

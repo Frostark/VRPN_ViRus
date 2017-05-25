@@ -324,13 +324,16 @@ namespace ViRus
 			{
 				HitCharacter::takeDamage(idmg);
 
-				if (health > 0)
+				if (audioEnabled)
 				{
-					sound_mgr->playAudio(audio_enemy_hit, true);
-				}
-				else
-				{
-					sound_mgr->playAudio(audio_enemy_dead, true);
+					if (health > 0)
+					{
+						sound_mgr->playAudio(audio_enemy_hit, true);
+					}
+					else
+					{
+						sound_mgr->playAudio(audio_enemy_dead, true);
+					}
 				}
 			}
 
@@ -400,13 +403,16 @@ namespace ViRus
 			{
 				HitCharacter::takeDamage(idmg);
 
-				if (health > 0)
+				if (audioEnabled)
 				{
-					sound_mgr->playAudio(audio_player_hit, true);
-				}
-				else
-				{
-					sound_mgr->playAudio(audio_player_dead, true);
+					if (health > 0)
+					{
+						sound_mgr->playAudio(audio_player_hit, true);
+					}
+					else
+					{
+						sound_mgr->playAudio(audio_player_dead, true);
+					}
 				}
 			}
 

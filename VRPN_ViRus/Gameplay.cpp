@@ -226,16 +226,62 @@ namespace ViRus
 		}
 	}
 
-	void Menu::drawMenu()
+	void Menu::drawBasic()
 	{
 		// Create an Menu Entity 
 		Ogre::Entity* ogreMenu = ptr_scn_mgr->createEntity("Menu", menu_mesh);
 		// Create a Menu and attach the Entity to it
-		Ogre::SceneNode* menuNode = ptr_scn_mgr->getRootSceneNode()->createChildSceneNode("MenuNode");
+		menuNode = ptr_scn_mgr->getRootSceneNode()->createChildSceneNode("MenuNode");
 
 		menuNode->scale(Ogre::Vector3(0.1, 0.1, 0.1));
 		menuNode->translate(Ogre::Vector3(8, 1.1, -4));
 		menuNode->attachObject(ogreMenu);
 		menuNode->rotate(Vector3::NEGATIVE_UNIT_Y, Degree(90));
+
+	}
+	void Menu::addButton(std::string imesh_name, Ogre::Vector3 ipos, void(*iat_button) (HitButton *))
+	{
+		// Create an QuitButton Entity 
+		Ogre::Entity* ogreButton = ptr_scn_mgr->createEntity("Button" + Ogre::StringConverter::toString(nButtons), imesh_name);
+		Ogre::SceneNode* buttonNode = ptr_scn_mgr->getRootSceneNode()->createChildSceneNode();
+		Ogre::SceneNode* entNode = buttonNode->createChildSceneNode();
+		entNode->attachObject(ogreButton);
+
+		buttonNode->scale(Ogre::Vector3(0.1, 0.1, 0.1));
+
+		Ogre::Vector3 size = ogreButton->getBoundingBox().getSize()*0.5*0.1;
+
+		entNode->translate(Ogre::Vector3(-size.x, -size.y, 0), Ogre::Node::TS_WORLD);
+
+		buttonNode->rotate(Vector3::NEGATIVE_UNIT_Y, Degree(90));
+		buttonNode->translate(ipos);
+
+		Ogre::Vector3 position = buttonNode->getPosition();
+		Ogre::Quaternion rot = buttonNode->getOrientation();
+
+		OgreBulletCollisions::BoxCollisionShape *box = new OgreBulletCollisions::BoxCollisionShape(size);
+		OgreBulletDynamics::RigidBody *body = new OgreBulletDynamics::RigidBody("Body" + Ogre::StringConverter::toString(nButtons), mWorld, ViRus::ColliderType::OBSTACLE, ViRus::ColliderType::HERO);
+		body->setStaticShape(buttonNode, box, 1, 1, position, rot);
+		body->setKinematicObject(true);
+		body->disableDeactivation();
+
+		ViRus::HitButton *ptr_button = new ViRus::HitButton(body, box, buttonNode);
+
+		ptr_button->set_at_button(iat_button);
+		
+		hitmap->add_hittable(*body->getBulletObject(), *ptr_button);
+
+		buttons.push_back(ptr_button);
+		nButtons++;
+	}
+
+	void Menu::hide()
+	{
+		for (HitButton *ptr : buttons)
+		{
+			hitmap->delete_hittable(*ptr);
+		}
+		
+		// Delete Menu Node here
 	}
 }

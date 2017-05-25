@@ -203,10 +203,13 @@ namespace ViRus
 			void drawBasic();
 			
 			// Add a new button
-			void addButton(std::string mesh_name, Ogre::Vector3 ipos, void(*iat_button) (HitButton *));
+			void addButton(std::string imesh_name, Ogre::Vector3 ipos, void(*iat_button) (HitButton *));
 
 			// Despawn the menu
 			void hide();
+
+			// Show panel
+			void showPanel(std::string imesh_name);
 
 	};
 }

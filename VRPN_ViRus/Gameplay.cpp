@@ -231,7 +231,7 @@ namespace ViRus
 		// Create an Menu Entity 
 		Ogre::Entity* ogreMenu = ptr_scn_mgr->createEntity("Menu", menu_mesh);
 		// Create a Menu and attach the Entity to it
-		menuNode = ptr_scn_mgr->getRootSceneNode()->createChildSceneNode("MenuNode");
+		menuNode = ptr_scn_mgr->getRootSceneNode()->createChildSceneNode();
 
 		menuNode->scale(Ogre::Vector3(0.1, 0.1, 0.1));
 		menuNode->translate(Ogre::Vector3(8, 1.1, -4));
@@ -283,5 +283,27 @@ namespace ViRus
 		}
 		
 		// Delete Menu Node here
+		if (menuNode)
+		{
+			destroy_node(menuNode);
+
+			menuNode->removeAndDestroyAllChildren();
+
+			//Delete the node
+			if (ptr_scn_mgr)
+				ptr_scn_mgr->destroySceneNode(menuNode);
+
+			menuNode = nullptr;
+		}
+	}
+	void Menu::showPanel(std::string imesh_name)
+	{
+		Ogre::Entity* ogrePanel = ptr_scn_mgr->createEntity("Panel", imesh_name);
+		Ogre::SceneNode* panelNode = ptr_scn_mgr->getRootSceneNode()->createChildSceneNode();
+
+		panelNode->scale(Ogre::Vector3(0.1, 0.1, 0.1));
+		panelNode->translate(Ogre::Vector3(6, 1.15, -6));
+		panelNode->attachObject(ogrePanel);
+		panelNode->rotate(Vector3::NEGATIVE_UNIT_Y, Degree(90));
 	}
 }

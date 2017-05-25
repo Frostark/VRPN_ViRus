@@ -30,8 +30,7 @@ TutorialApplication::~TutorialApplication(void)
 void TutorialApplication::createScene(void)
 {
 	hud = new OgreText();
-	hud->setText("Start!");    // Text to be displayed
-										  // Now it is possible to use the Ogre::String as parameter too
+								   // Now it is possible to use the Ogre::String as parameter too
 	hud->setPos(0.2, 0.1f);        // Text position, using relative co-ordinates
 	hud->setCol(1.0f, 0, 0, 1);    // Text colour (Red, Green, Blue, Alpha)
 
@@ -104,24 +103,6 @@ void TutorialApplication::createScene(void)
 	menu = new ViRus::Menu("menu.mesh");
 
 	drawMenu();
-
-	/*// Create an Congatulations Entity 
-	Ogre::Entity* ogreCongratulations = mSceneMgr->createEntity("Congratulations", "congratulations.mesh");
-	Ogre::SceneNode* congratulationsNode = mSceneMgr->getRootSceneNode()->createChildSceneNode("CongratulationsNode");
-
-	congratulationsNode->scale(Ogre::Vector3(0.1, 0.1, 0.1));
-	congratulationsNode->translate(Ogre::Vector3(6, 1.15, -6));
-	congratulationsNode->attachObject(ogreCongratulations);
-	congratulationsNode->rotate(Vector3::NEGATIVE_UNIT_Y, Degree(90));*/
-
-	// Create an Dead Entity 
-	/*Ogre::Entity* ogreDead = mSceneMgr->createEntity("Dead", "dead.mesh");
-	Ogre::SceneNode* deadNode = mSceneMgr->getRootSceneNode()->createChildSceneNode("DeadNode");
-
-	deadNode->scale(Ogre::Vector3(0.1, 0.1, 0.1));
-	deadNode->translate(Ogre::Vector3(6, 1.15, -6));
-	deadNode->attachObject(ogreDead);
-	deadNode->rotate(Vector3::NEGATIVE_UNIT_Y, Degree(90));*/
 
 	/*******************************************************************/
 
@@ -358,7 +339,7 @@ bool TutorialApplication::processUnbufferedInput(const Ogre::FrameEvent& evt)
 		hitmap.handle_collision(obA, obB);
 	}
 
-	if (spawner)
+	if (spawner&&inGame)
 		while (spawner->need_spawn())
 			spawner->spawn();
 
@@ -424,22 +405,24 @@ bool TutorialApplication::processUnbufferedInput(const Ogre::FrameEvent& evt)
 	left_gun->refresh(evt.timeSinceLastFrame);
 	right_gun->refresh(evt.timeSinceLastFrame);
 
-	damages.update_ttl(evt.timeSinceLastFrame);
-	damages.draw(*ogre2dManager_damage);
-	radar.draw_radar(*ogre2dManager_radar);
-
-	if (ptr_hero)
+	
+	if (ptr_hero&&inGame)
 	{
+		damages.update_ttl(evt.timeSinceLastFrame);
+		damages.draw(*ogre2dManager_damage);
+		radar.draw_radar(*ogre2dManager_radar);
+
 		ptr_hero->update_di();
 		ptr_hero->update_rdr();
 
 		if (spawner)
 			spawner->draw_radar(radar, *ogre2dManager_dot);
 
-
+		hud->setText(Ogre::String("Health ") + Ogre::StringConverter().toString(ptr_hero ? ptr_hero->get_health() : 0) + Ogre::String("         Points ") + Ogre::StringConverter().toString(points));
 	}
 
-	hud->setText(Ogre::String("Health ") + Ogre::StringConverter().toString(ptr_hero ? ptr_hero->get_health() : 0) + Ogre::String("         Points ") + Ogre::StringConverter().toString(points));
+	else
+		hud->setText("");
 
 	return true;
 }
@@ -511,7 +494,9 @@ void TutorialApplication::target_callback(ViRus::Hittable *h)
 }
 bool TutorialApplication::at_death_callback(ViRus::HitPlayer *player)
 {
+	inGame = false;
 	player->revive();
+	menu->showPanel("dead.mesh");
 	points = 0;
 	if (spawner)
 		spawner->kill_all();
@@ -538,6 +523,7 @@ void TutorialApplication::pickup_callback(ViRus::Hittable * h)
 }
 void TutorialApplication::at_go_callback(ViRus::HitButton * h)
 {
+	inGame = true;
 	menu->hide();
 }
 void TutorialApplication::at_quit_callback(ViRus::HitButton * h)

@@ -482,7 +482,7 @@ void VRPN_CALLBACK TutorialApplication::handle_rightHand_tracker(void * userData
 }
 void TutorialApplication::drawMenu()
 {
-	menu->drawBasic();
+	menu->show();
 	menu->addButton("goButton.mesh", Ogre::Vector3(8, 2.3, -4), at_go_callback);
 	menu->addButton("soundButton.mesh", Ogre::Vector3(8, 2.3, -1), at_quit_callback);
 	menu->addButton("quitButton.mesh", Ogre::Vector3(8, 2.3, 2), at_quit_callback);
@@ -496,7 +496,8 @@ bool TutorialApplication::at_death_callback(ViRus::HitPlayer *player)
 {
 	inGame = false;
 	player->revive();
-	menu->showPanel("dead.mesh");
+	//menu->showPanel("dead.mesh");
+	drawMenu();
 	points = 0;
 	if (spawner)
 		spawner->kill_all();

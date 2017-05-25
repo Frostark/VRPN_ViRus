@@ -229,9 +229,9 @@ namespace ViRus
 	void Menu::drawBasic()
 	{
 		// Create an Menu Entity 
-		Ogre::Entity* ogreMenu = ptr_scn_mgr->createEntity("Menu", menu_mesh);
+		ogreMenu = ptr_scn_mgr->createEntity("Menu", menu_mesh);
 		// Create a Menu and attach the Entity to it
-		menuNode = ptr_scn_mgr->getRootSceneNode()->createChildSceneNode();
+		Ogre::SceneNode* menuNode = ptr_scn_mgr->getRootSceneNode()->createChildSceneNode();
 
 		menuNode->scale(Ogre::Vector3(0.1, 0.1, 0.1));
 		menuNode->translate(Ogre::Vector3(8, 1.1, -4));
@@ -239,6 +239,12 @@ namespace ViRus
 		menuNode->rotate(Vector3::NEGATIVE_UNIT_Y, Degree(90));
 
 	}
+
+	void Menu::show() 
+	{ 
+		ogreMenu->setVisible(true); 
+	}
+
 	void Menu::addButton(std::string imesh_name, Ogre::Vector3 ipos, void(*iat_button) (HitButton *))
 	{
 		// Create an QuitButton Entity 
@@ -281,19 +287,13 @@ namespace ViRus
 		{
 			hitmap->delete_hittable(*ptr);
 		}
+
+		buttons.clear();
 		
 		// Delete Menu Node here
-		if (menuNode)
+		if (ogreMenu)
 		{
-			destroy_node(menuNode);
-
-			menuNode->removeAndDestroyAllChildren();
-
-			//Delete the node
-			if (ptr_scn_mgr)
-				ptr_scn_mgr->destroySceneNode(menuNode);
-
-			menuNode = nullptr;
+			ogreMenu->setVisible(false);
 		}
 	}
 	void Menu::showPanel(std::string imesh_name)

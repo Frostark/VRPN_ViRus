@@ -71,7 +71,7 @@ http://www.ogre3d.org/wiki/
 //---------------------------------------------------------------------------
 
 extern SoundManager *sound_mgr;
-
+extern bool audioEnabled;
 extern unsigned int audio_fire_gun,audio_enemy_hit,audio_enemy_dead,audio_player_hit,audio_player_dead,music_cemetery,audio_healing;
 
 extern int points;

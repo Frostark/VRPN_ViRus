@@ -59,7 +59,8 @@ void TutorialApplication::createScene(void)
 	sound_mgr->loadAudio("music_cemetery.wav", &music_cemetery, true);
 	sound_mgr->loadAudio("healing.wav", &audio_healing, false);
 
-	sound_mgr->playAudio(music_cemetery, true);
+	if (audioEnabled)
+		sound_mgr->playAudio(music_cemetery, true);
 
 	//Set up the scene manager on the map
 	ViRus::Hittable::ptr_scn_mgr = mSceneMgr;
@@ -429,7 +430,7 @@ void TutorialApplication::drawMenu()
 {
 	menu->show();
 	menu->addButton("goButton.mesh", Ogre::Vector3(8, 2.3, -4), at_go_callback);
-	menu->addButton("soundButton.mesh", Ogre::Vector3(8, 2.3, -1), at_quit_callback);
+	menu->addButton("soundButton.mesh", Ogre::Vector3(8, 2.3, -1), at_sound_callback);
 	menu->addButton("quitButton.mesh", Ogre::Vector3(8, 2.3, 2), at_quit_callback);
 }
 void TutorialApplication::target_callback(ViRus::Hittable *h)
@@ -475,6 +476,14 @@ void TutorialApplication::at_go_callback(ViRus::HitButton * h)
 void TutorialApplication::at_quit_callback(ViRus::HitButton * h)
 {
 	running = false;
+}
+
+void TutorialApplication::at_sound_callback(ViRus::HitButton * h)
+{
+	if (audioEnabled = !audioEnabled)
+		sound_mgr->playAudio(music_cemetery, true);
+	else
+		sound_mgr->stopAllAudio();
 }
 
 

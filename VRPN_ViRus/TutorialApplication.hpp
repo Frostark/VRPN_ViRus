@@ -103,6 +103,7 @@ private:
 	static void pickup_callback(ViRus::Hittable *h);
 	static void at_go_callback(ViRus::HitButton *h);
 	static void at_quit_callback(ViRus::HitButton *h);
+	static void at_sound_callback(ViRus::HitButton *h);
 
 	Ogre2dManager* ogre2dManager_radar,*ogre2dManager_dot,*ogre2dManager_damage;
 	OgreText *hud;

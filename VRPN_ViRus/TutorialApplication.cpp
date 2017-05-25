@@ -29,6 +29,8 @@ TutorialApplication::~TutorialApplication(void)
 //---------------------------------------------------------------------------
 void TutorialApplication::createScene(void)
 {
+	app = this;
+
 	hud = new OgreText();
 								   // Now it is possible to use the Ogre::String as parameter too
 	hud->setPos(0.2, 0.1f);        // Text position, using relative co-ordinates
@@ -497,8 +499,41 @@ bool TutorialApplication::at_death_callback(ViRus::HitPlayer *player)
 {
 	inGame = false;
 	player->revive();
-	//menu->showPanel("dead.mesh");
-	drawMenu();
+
+
+	// Create an QuitButton Entity 
+	Ogre::Entity* ogreButton = app->mSceneMgr->createEntity("DeadPanel" , "dead.mesh");
+	Ogre::SceneNode* buttonNode = app->mSceneMgr->getRootSceneNode()->createChildSceneNode();
+	Ogre::SceneNode* entNode = buttonNode->createChildSceneNode();
+	entNode->attachObject(ogreButton);
+
+	buttonNode->scale(Ogre::Vector3(0.1, 0.1, 0.1));
+
+	Ogre::Vector3 size = ogreButton->getBoundingBox().getSize()*0.5*0.1;
+
+	entNode->translate(Ogre::Vector3(-size.x, -size.y, 0), Ogre::Node::TS_WORLD);
+
+	Ogre::Vector3 pos_panel(6, 1.15, -6);
+
+	buttonNode->rotate(Vector3::NEGATIVE_UNIT_Y, Degree(90));
+	buttonNode->translate(pos_panel);
+
+	Ogre::Vector3 position = buttonNode->getPosition();
+	Ogre::Quaternion rot = buttonNode->getOrientation();
+
+	OgreBulletCollisions::BoxCollisionShape *box = new OgreBulletCollisions::BoxCollisionShape(size);
+	OgreBulletDynamics::RigidBody *body = new OgreBulletDynamics::RigidBody("Body" , app->mWorld, ViRus::ColliderType::OBSTACLE, ViRus::ColliderType::HERO);
+	body->setStaticShape(buttonNode, box, 1, 1, position, rot);
+	body->setKinematicObject(true);
+	body->disableDeactivation();
+
+	ViRus::HitButton *ptr_button = new ViRus::HitButton(body, box, buttonNode);
+
+	ptr_button->set_at_button(at_deadPanel_callback);
+
+	app->hitmap.add_hittable(*body->getBulletObject(), *ptr_button);
+
+	//drawMenu();
 	points = 0;
 	if (spawner)
 		spawner->kill_all();
@@ -539,6 +574,12 @@ void TutorialApplication::at_sound_callback(ViRus::HitButton * h)
 		sound_mgr->playAudio(music_cemetery, true);
 	else
 		sound_mgr->stopAllAudio();
+}
+
+void TutorialApplication::at_deadPanel_callback(ViRus::HitButton * h)
+{
+	app->drawMenu();
+	h->destroy();
 }
 
 

@@ -44,6 +44,10 @@ bool running = true;
 bool inGame = false;
 ViRus::Menu *menu;
 
+class TutorialApplication;
+
+TutorialApplication *app;
+
 class TutorialApplication : public BaseApplication
 {
 public:
@@ -58,7 +62,7 @@ protected:
 	// Ogre::FrameListener
 	virtual bool frameRenderingQueued(const Ogre::FrameEvent& evt);
 
-private:
+public:
 
 	//Update nodes' positions based on trackers
 	bool processUnbufferedInput(const Ogre::FrameEvent& evt);
@@ -104,6 +108,7 @@ private:
 	static void at_go_callback(ViRus::HitButton *h);
 	static void at_quit_callback(ViRus::HitButton *h);
 	static void at_sound_callback(ViRus::HitButton *h);
+	static void at_deadPanel_callback(ViRus::HitButton *h);
 
 	Ogre2dManager* ogre2dManager_radar,*ogre2dManager_dot,*ogre2dManager_damage;
 	OgreText *hud;

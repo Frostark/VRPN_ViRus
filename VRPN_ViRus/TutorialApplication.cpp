@@ -99,64 +99,10 @@ void TutorialApplication::createScene(void)
 	ViRus::Menu::hitmap = &hitmap;
 	ViRus::Menu::mWorld = mWorld;
 	
-	ViRus::Menu menu = ViRus::Menu("menu.mesh");
+	menu = new ViRus::Menu("menu.mesh");
 
-	menu.drawMenu();
+	drawMenu();
 
-	// Create an GoButton Entity 
-	Ogre::Entity* ogreGoButton = mSceneMgr->createEntity("GoButton", "goButton.mesh");
-	// Create a Menu and attach the Entity to it
-	Ogre::SceneNode* goButtonNode = mSceneMgr->getRootSceneNode()->createChildSceneNode("GoButtonNode");
-	 
-	goButtonNode->scale(Ogre::Vector3(0.1, 0.1, 0.1));
-	goButtonNode->translate(Ogre::Vector3(8, 1.15, -5));
-	goButtonNode->attachObject(ogreGoButton);
-	goButtonNode->rotate(Vector3::NEGATIVE_UNIT_Y, Degree(90));
-
-
-
-	// Create an SoudButton Entity 
-	Ogre::Entity* ogreSoundButton = mSceneMgr->createEntity("SoundButton", "soundButton.mesh");
-	// Create a Menu and attach the Entity to it
-	Ogre::SceneNode* soundButtonNode = mSceneMgr->getRootSceneNode()->createChildSceneNode("SoundButtonNode");
-
-	soundButtonNode->scale(Ogre::Vector3(0.1, 0.1, 0.1));
-	soundButtonNode->translate(Ogre::Vector3(8, 1.15, -2));
-	soundButtonNode->attachObject(ogreSoundButton);
-	soundButtonNode->rotate(Vector3::NEGATIVE_UNIT_Y, Degree(90));
-
-	// Create an QuitButton Entity 
-	Ogre::Entity* ogreQuitButton = mSceneMgr->createEntity("QuitButton", "quitButton.mesh");
-	Ogre::SceneNode* quitButtonNode = mSceneMgr->getRootSceneNode()->createChildSceneNode("QuitButtonNode");
-	Ogre::SceneNode* entQuitNode = quitButtonNode->createChildSceneNode();
-	entQuitNode->attachObject(ogreQuitButton);
-
-	quitButtonNode->scale(Ogre::Vector3(0.1, 0.1, 0.1));
-
-	Ogre::Vector3 quitSize = ogreQuitButton->getBoundingBox().getSize()*0.5*0.1;
-	
-	entQuitNode->translate(Ogre::Vector3(-quitSize.x, -quitSize.y,0),Ogre::Node::TS_WORLD);
-
-	quitButtonNode->rotate(Vector3::NEGATIVE_UNIT_Y, Degree(90));
-	quitButtonNode->translate(Ogre::Vector3(8, 2.3, 2));
-	
-	Ogre::Vector3 quitPosition = quitButtonNode->getPosition();
-	Ogre::Quaternion quitRot = quitButtonNode->getOrientation();
-
-	OgreBulletCollisions::BoxCollisionShape *quitBox = new OgreBulletCollisions::BoxCollisionShape(quitSize);
-	OgreBulletDynamics::RigidBody *quitBody = new OgreBulletDynamics::RigidBody("QuitBody", mWorld, ViRus::ColliderType::OBSTACLE, ViRus::ColliderType::HERO);
-	quitBody->setStaticShape(quitButtonNode, quitBox, 1, 1, quitPosition, quitRot);
-	quitBody->setKinematicObject(true);
-	quitBody->disableDeactivation();
-
-	ViRus::HitButton *ptr_quitButton = new ViRus::HitButton(quitBody, quitBox, quitButtonNode);
-	
-	ptr_quitButton->set_at_button(at_quit_callback);
-
-	hitmap.add_hittable(*quitBody->getBulletObject(), *ptr_quitButton);
-
-
-	
 	/*// Create an Congatulations Entity 
 	Ogre::Entity* ogreCongratulations = mSceneMgr->createEntity("Congratulations", "congratulations.mesh");
 	Ogre::SceneNode* congratulationsNode = mSceneMgr->getRootSceneNode()->createChildSceneNode("CongratulationsNode");
@@ -496,6 +442,13 @@ void VRPN_CALLBACK TutorialApplication::handle_rightHand_tracker(void * userData
 {
 	(((TutorialApplication*)userData)->rightHandData) = t;
 }
+void TutorialApplication::drawMenu()
+{
+	menu->drawBasic();
+	menu->addButton("goButton.mesh", Ogre::Vector3(8, 2.3, -4), at_go_callback);
+	menu->addButton("soundButton.mesh", Ogre::Vector3(8, 2.3, -1), at_quit_callback);
+	menu->addButton("quitButton.mesh", Ogre::Vector3(8, 2.3, 2), at_quit_callback);
+}
 void TutorialApplication::target_callback(ViRus::Hittable *h)
 {
 	if (h == ptr_hero)
@@ -528,10 +481,16 @@ void TutorialApplication::pickup_callback(ViRus::Hittable * h)
 {
 	spawner->medkit_callback(h);
 }
+void TutorialApplication::at_go_callback(ViRus::HitButton * h)
+{
+	menu->hide();
+}
 void TutorialApplication::at_quit_callback(ViRus::HitButton * h)
 {
 	running = false;
 }
+
+
 //-------------------------------------------------------------------------------------
 
 #if OGRE_PLATFORM == OGRE_PLATFORM_WIN32

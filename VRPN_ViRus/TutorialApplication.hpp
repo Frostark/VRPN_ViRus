@@ -41,6 +41,7 @@ ViRus::Spawner *spawner;
 ViRus::Gun *left_gun;
 ViRus::Gun *right_gun;
 bool running = true;
+ViRus::Menu *menu;
 
 class TutorialApplication : public BaseApplication
 {
@@ -67,6 +68,9 @@ private:
 	static void VRPN_CALLBACK handle_HMD_tracker(void* userData, const vrpn_TRACKERCB t);
 	static void VRPN_CALLBACK handle_leftHand_tracker(void* userData, const vrpn_TRACKERCB t);
 	static void VRPN_CALLBACK handle_rightHand_tracker(void* userData, const vrpn_TRACKERCB t);
+
+	// Menu
+	void drawMenu();
 
 	//Data received from the trackers
 	vrpn_TRACKERCB rightHandData, leftHandData, HMDData;
@@ -96,6 +100,7 @@ private:
 	static void left_gun_callback(ViRus::Hittable *h);
 	static void right_gun_callback(ViRus::Hittable *h);
 	static void pickup_callback(ViRus::Hittable *h);
+	static void at_go_callback(ViRus::HitButton *h);
 	static void at_quit_callback(ViRus::HitButton *h);
 
 	Ogre2dManager* ogre2dManager_radar,*ogre2dManager_dot,*ogre2dManager_damage;

@@ -184,12 +184,14 @@ namespace ViRus
 
 		private:
 			std::string menu_mesh; //Main menu mesh
+			std::list<HitButton *> buttons; // Hittable buttons in the menu
+			Ogre::SceneNode* menuNode;  // Basic menu (without buttons)
 
 		public:
 
 			// Complete constructor
 			Menu(std::string imenu_mesh)
-			: menu_mesh(imenu_mesh)
+			: menu_mesh(imenu_mesh), menuNode()
 			{}
 
 			// Destructor
@@ -198,10 +200,13 @@ namespace ViRus
 		public:
 
 			// Draw menu without buttons
-			void drawMenu();
+			void drawBasic();
 			
 			// Add a new button
-			void addMenuButton(std::string mesh_name);
+			void addButton(std::string mesh_name, Ogre::Vector3 ipos, void(*iat_button) (HitButton *));
+
+			// Despawn the menu
+			void hide();
 
 	};
 }

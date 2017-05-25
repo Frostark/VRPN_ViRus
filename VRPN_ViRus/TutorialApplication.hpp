@@ -44,6 +44,8 @@ bool running = true;
 bool inGame = false;
 ViRus::Menu *menu;
 
+constexpr int MAX_POINTS = 15;
+
 class TutorialApplication;
 
 TutorialApplication *app;

@@ -474,6 +474,7 @@ namespace ViRus
 	{
 		private: 
 			void(*at_button) (HitButton *);//Call this function, when the button is hit.
+			bool isActive = true;
 
 		public:
 
@@ -499,6 +500,16 @@ namespace ViRus
 			void set_at_button(void(*iat_button) (HitButton *))
 			{
 				at_button = iat_button;
+			}
+
+			void destroy()
+			{
+				isActive = false;
+			}
+
+			bool finished() override
+			{
+				return !isActive;
 			}
 	};
 

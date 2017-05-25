@@ -41,6 +41,7 @@ ViRus::Spawner *spawner;
 ViRus::Gun *left_gun;
 ViRus::Gun *right_gun;
 bool running = true;
+bool inGame = false;
 ViRus::Menu *menu;
 
 class TutorialApplication : public BaseApplication
@@ -70,7 +71,7 @@ private:
 	static void VRPN_CALLBACK handle_rightHand_tracker(void* userData, const vrpn_TRACKERCB t);
 
 	// Menu
-	void drawMenu();
+	static void drawMenu();
 
 	//Data received from the trackers
 	vrpn_TRACKERCB rightHandData, leftHandData, HMDData;
